@@ -31,7 +31,7 @@ begin
  values(new.id,coalesce(nullif(new.raw_user_meta_data->>'full_name',''),'Participante'),
  coalesce(nullif(new.raw_user_meta_data->>'career',''),'Otra'),
  coalesce(nullif(new.raw_user_meta_data->>'school',''),'No especificado'),
- lower(new.email) in ('luis.bermudez@uip.pa','marcel.gutierrez@uip.pa'));
+ false);
  return new;
 end; $$;
 drop trigger if exists on_bootcamp_signup on auth.users;
