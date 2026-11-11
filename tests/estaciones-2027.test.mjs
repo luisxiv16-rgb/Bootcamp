@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {STATIONS,ROTATIONS,RUBRIC,proposeTeams,validateProposal,rotationFor,MAX_TOTAL_POINTS} from './bootcamp-estaciones-2027.mjs';
+assert.equal(STATIONS.length,7);
+assert.equal(STATIONS[2].place,'Innovation Hub');
+assert.equal(STATIONS[6].place,'Cabina de TV');
+assert.equal(ROTATIONS.length,8);
+assert.equal(Object.values(RUBRIC).reduce((a,b)=>a+b,0),100);
+assert.equal(MAX_TOTAL_POINTS,750);
+const students=Array.from({length:150},(_,i)=>({id:'fake-'+i,career:['Psicología','Derecho','Ingeniería','Medicina','Arquitectura'][i%5],faculty:['Salud','Negocios','Ingeniería'][i%3]}));
+const proposal=proposeTeams(students);assert.equal(proposal.teams.length,20);
+assert.deepEqual(proposal.teams.map(x=>x.members.length).sort((a,b)=>a-b),[...Array(10).fill(7),...Array(10).fill(8)]);
+assert.equal(validateProposal(proposal).valid,true);
+for(let i=0;i<20;i++)assert.equal(new Set(Array.from({length:7},(_,r)=>rotationFor(i,r+1).id)).size,7);
+assert.equal(proposal.requiresAdminApproval,true);
+console.log('OK: 7 estaciones, horarios, rúbrica, 150 ficticios, 20 equipos, 7 rotaciones sin repetición');
