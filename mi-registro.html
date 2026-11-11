@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mi registro y QR | Bootcamp UIP 2027</title>
+<style>
+:root{color-scheme:dark;--azul:#071e43;--azul2:#10366d;--naranja:#ff9d1b;--texto:#e9f3ff}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at 12% 5%,#174b8c,transparent 48%),linear-gradient(135deg,#05132e,#092858);color:var(--texto);min-height:100vh}
+main{width:min(760px,94vw);margin:35px auto 70px}.top{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}h1{font-size:clamp(26px,5vw,42px);margin:20px 0 8px}.tag{color:var(--naranja);letter-spacing:.12em;font-size:13px;font-weight:900}.sub{color:#b7cde7;line-height:1.5}
+.card{border:1px solid #37649f;background:#092852e8;border-radius:24px;padding:clamp(20px,5vw,35px);box-shadow:0 18px 40px #0005;margin-top:25px}
+label{display:block;margin:16px 0 8px;font-weight:700}input{display:block;width:100%;padding:14px 15px;background:#041630;color:white;border:1px solid #557db2;border-radius:12px;font-size:16px}
+button,.btn{background:var(--naranja);color:#071e43;border:0;border-radius:12px;font-weight:900;padding:13px 18px;cursor:pointer;font-size:15px}button:disabled{opacity:.5;cursor:progress}.secondary{background:transparent;color:#e9f3ff;border:1px solid #6689bb;text-decoration:none;display:inline-block}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.error{color:#ffbdbd}.note{font-size:13px;color:#a9bdd9;line-height:1.6}#message{min-height:1.4em;margin-top:12px}
+.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{padding:12px 0;border-bottom:1px solid #355783}.field strong{display:block;font-size:12px;color:#a5c7ea;margin-bottom:7px}.field span{overflow-wrap:anywhere}
+.qrbox{background:#fff;width:fit-content;margin:20px auto;padding:15px;border-radius:14px;min-height:228px;min-width:228px;display:grid;place-items:center}
+#qr img{display:block}#qrcode{display:flex;justify-content:center} .hidden{display:none!important}
+@media(max-width:550px){.details{grid-template-columns:1fr}}
+@media print{body{background:white;color:black}main{width:100%;margin:0}.card{background:white;color:black;box-shadow:none;border:1px solid #aaa}.actions,.top a,#loginCard,.note{display:none!important}.tag,.field strong{color:black}.qrbox{border:1px solid #ddd}}
+</style></head><body>
+<main>
+<div class="top"><span class="tag">UIP · BOOTCAMP 2027</span><a class="btn secondary" href="/">← Volver al Bootcamp</a></div>
+<h1>Mi registro y código QR</h1>
+<p class="sub">Consulta tu inscripción y presenta tu QR individual durante las actividades. Cada participante solo puede ver sus propios datos.</p>
+<section id="loginCard" class="card">
+<h2>Ingresar a mi registro</h2><p class="sub">Utiliza el mismo correo y contraseña con los que te inscribiste en Bootcamp UIP 2027.</p>
+<form id="loginForm">
+<label for="email">Correo electrónico</label><input id="email" type="email" autocomplete="username" required>
+<label for="password">Contraseña</label><input id="password" type="password" autocomplete="current-password" required>
+<div class="actions"><button type="submit" id="loginBtn">Ingresar y ver mi QR</button><a class="btn secondary" href="/">Ir a Registro rápido</a></div>
+</form>
+<p id="message" role="status" aria-live="polite"></p>
+</section>
+<section id="passCard" class="card hidden">
+<div class="top"><h2>Mi pase digital</h2><button class="secondary" id="logoutBtn" type="button">Cerrar sesión</button></div>
+<p id="passMessage" class="sub"></p>
+<div class="details">
+<div class="field"><strong>Nombre completo</strong><span id="fullName"></span></div>
+<div class="field"><strong>Correo registrado</strong><span id="registeredEmail"></span></div>
+<div class="field"><strong>Programa / Carrera</strong><span id="career"></span></div>
+<div class="field"><strong>Sede / Procedencia</strong><span id="school"></span></div>
+<div class="field"><strong>Equipo</strong><span id="team"></span></div>
+<div class="field"><strong>Fecha de inscripción (Panamá)</strong><span id="createdAt"></span></div>
+</div>
+<div class="qrbox"><div id="qrcode" aria-label="Código QR individual"></div></div>
+<p class="note" style="text-align:center">Este código identifica tu registro en el Bootcamp. La asistencia y los puntos requieren validación por el equipo organizador. No compartas tu contraseña.</p>
+<div class="actions"><button type="button" id="printBtn">Imprimir / Guardar PDF</button><a class="btn secondary" href="/">Volver a mis desafíos</a></div>
+</section>
+<p class="note">Si te registraste solo en una versión antigua que guardaba datos en este navegador, primero debes completar tu cuenta en la versión conectada a Supabase. No se importan registros locales automáticamente.</p>
+</main>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+(()=>{'use strict';
+const el=id=>document.getElementById(id),msg=(text,error=false)=>{el('message').textContent=text;el('message').className=error?'error':''};
+let db=null;
+function hidePrivate(){el('passCard').classList.add('hidden');el('loginCard').classList.remove('hidden');el('qrcode').replaceChildren()}
+function showPrivate(){el('loginCard').classList.add('hidden');el('passCard').classList.remove('hidden')}
+async function loadOwnPass(){
+ const {data:{user},error:authError}=await db.auth.getUser();
+ if(authError||!user){hidePrivate();return}
+ const {data:p,error}=await db.from('bootcamp_profiles').select('id,full_name,email,school,career,team,is_admin,created_at').eq('id',user.id).single();
+ if(error||!p){hidePrivate();msg('No se pudo recuperar tu registro. Comprueba que hayas completado Registro rápido.',true);return}
+ el('fullName').textContent=p.full_name||'No indicado';el('registeredEmail').textContent=p.email||user.email||'No indicado';
+ el('career').textContent=p.is_admin?'Administración del Bootcamp':(p.career||'No indicada');
+ el('school').textContent=p.school||'No indicada';
+ el('team').textContent=p.is_admin?'Administrador · sin equipo':(p.team||'Pendiente de asignación');
+ el('createdAt').textContent=p.created_at?new Date(p.created_at).toLocaleString('es-PA',{timeZone:'America/Panama',dateStyle:'medium',timeStyle:'short'}):'No disponible';
+ el('passMessage').textContent=p.is_admin?'Acceso administrativo verificado':'Registro individual confirmado en Supabase';
+ el('qrcode').replaceChildren();
+ if(typeof QRCode==='undefined'){hidePrivate();msg('No se pudo cargar el generador QR. Comprueba tu conexión a Internet.',true);return}
+ new QRCode(el('qrcode'),{text:'UIP-BOOTCAMP-2027:'+p.id,width:210,height:210,colorDark:'#071e43',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
+ showPrivate();
+}
+async function init(){
+ if(!window.supabase||!window.BOOTCAMP_SUPABASE_URL||!window.BOOTCAMP_SUPABASE_ANON_KEY){msg('No está disponible la conexión con el sistema de registros. Intenta recargar.',true);return}
+ db=window.supabase.createClient(window.BOOTCAMP_SUPABASE_URL,window.BOOTCAMP_SUPABASE_ANON_KEY);
+ await loadOwnPass();
+ el('loginForm').addEventListener('submit',async event=>{
+ event.preventDefault();el('loginBtn').disabled=true;msg('Verificando cuenta…');
+ try{
+ const {error}=await db.auth.signInWithPassword({email:el('email').value.trim(),password:el('password').value});
+ if(error)throw error;
+ el('password').value='';await loadOwnPass();msg('');
+ }catch(e){msg('No fue posible ingresar. Revisa el correo, la contraseña y la confirmación de tu cuenta.',true)}
+ finally{el('loginBtn').disabled=false}
+ });
+ el('logoutBtn').addEventListener('click',async()=>{await db.auth.signOut();hidePrivate();msg('Sesión cerrada. Tus datos permanecen guardados.');});
+ el('printBtn').addEventListener('click',()=>window.print());
+ db.auth.onAuthStateChange(event=>{if(event==='SIGNED_OUT')hidePrivate()});
+}
+init().catch(()=>msg('Error al iniciar el módulo. Recarga la página.',true));
+})();
+</script></body></html>
