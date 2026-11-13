@@ -30,7 +30,7 @@ async function refreshEntries(){
  $('stations').replaceChildren();
  for(const station of STATIONS){
   const entry=entries.find(e=>e.station_id===station.id),card=document.createElement('div');card.className='tile';
-  const locked=!isAdmin&&Date.now()<launch;
+  const locked=false;
   card.innerHTML='<span class="tag orange">Estación '+station.id+'</span><h3>'+escapeHTML(station.name)+'</h3><p class="muted">'+escapeHTML(station.place)+'</p><p class="small">Estado: '+escapeHTML(entry?.status||'No iniciado')+'</p>';
   const action=document.createElement('button');action.type='button';action.textContent=locked?'Disponible el 14 de noviembre':(entry?.status==='validated'||entry?.status==='submitted'?'Ver entrega':'Abrir reto');
   action.disabled=locked;action.onclick=()=>openEditor(station,entry);card.append(action);$('stations').append(card);
@@ -47,7 +47,7 @@ function openEditor(station,entry){
 async function save(status){
  if(!chosen)return;const ans=$('answer').value.trim();if(!ans){msg('saveStatus','Escribe la evidencia antes de continuar.',true);return}
  const url=$('evidenceUrl').value.trim();if(url&&!/^https:\/\//i.test(url)){msg('saveStatus','Usa enlaces https:// únicamente.',true);return}
- if(Date.now()<launch&&!isAdmin){msg('saveStatus','Esta estación se habilita el 14 de noviembre.',true);return}
+ 
  const payload={user_id:user.id,station_id:chosen.station.id,answer:ans,evidence_url:url||null,status};
  try{
  let result;
@@ -96,7 +96,7 @@ async function initialize(){
   $('identity').textContent=p.email+' · '+(p.career||'');
   $('team').textContent=isAdmin?'Administrador · sin equipo':(p.team||'Pendiente de confirmación');
   $('role').textContent=isAdmin?'Administrador':'Participante';
-  $('launchNote').textContent=isAdmin?'Acceso anticipado de supervisión (no asigna puntos automáticamente).':(Date.now()<launch?'Las evidencias se habilitan el 14 de noviembre a las 8:00 a. m., hora de Panamá.':'Tus estaciones están disponibles para registrar avances.');
+  $('launchNote').textContent=isAdmin?'Acceso anticipado de supervisión (no asigna puntos automáticamente).':('Tus estaciones están disponibles desde este momento para registrar avances.');
   show('login',false);show('workspace',true);show('logout',true);
   try{await refreshEntries();await renderAdmin()}catch(e){msg('status','No se pudieron recuperar tus avances: '+e.message,true)}
  }
