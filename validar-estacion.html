@@ -6,7 +6,7 @@
 <section id="login" class="card"><h2>Ingresar</h2><form id="signInForm"><label>Correo electrónico<input id="email" type="email" autocomplete="username" required></label><label>Contraseña<input id="password" type="password" autocomplete="current-password" required></label><button type="submit" id="signIn">Ingresar</button></form></section>
 <section id="participant" class="card hidden"><h2>Mi participación</h2><p id="participantName"></p><p class="muted">La solicitud quedará <b>pendiente</b> hasta que Coordinación confirme tu presencia. Escanear el QR no otorga puntos.</p><button id="request" type="button">Solicitar validación</button></section>
 <section id="admin" class="card hidden"><h2>Coordinación · validar presencia</h2><p class="muted">Confirma únicamente estudiantes presentes físicamente en esta estación.</p><button id="refresh" type="button">Actualizar pendientes</button><div id="queue"></div></section>
-<p class="small">Las solicitudes están habilitadas el 14 de noviembre de 2026, entre las 8:00 a. m. y la medianoche (hora de Panamá). Solicitudes duplicadas no generan nuevas asistencias.</p>
+<p class="small">Las solicitudes están habilitadas desde este momento hasta el 14 de noviembre de 2026 a las 11:59 p. m. (hora de Panamá). Solicitudes duplicadas no generan nuevas asistencias.</p>
 </main><script src="/config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 (async()=>{'use strict';
