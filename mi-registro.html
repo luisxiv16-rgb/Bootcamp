@@ -14,6 +14,19 @@ button,.btn{background:var(--naranja);color:#071e43;border:0;border-radius:12px;
 #qr img{display:block}#qrcode{display:flex;justify-content:center} .hidden{display:none!important}
 @media(max-width:550px){.details{grid-template-columns:1fr}}
 @media print{body{background:white;color:black}main{width:100%;margin:0}.card{background:white;color:black;box-shadow:none;border:1px solid #aaa}.actions,.top a,#loginCard,.note{display:none!important}.tag,.field strong{color:black}.qrbox{border:1px solid #ddd}}
+
+/* Ruta de estaciones del pasaporte: misma paleta institucional existente */
+.route-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-top:24px}
+.route-head h3{margin:0;font-size:22px}.route-desc{color:#b7cde7;line-height:1.5}
+.route-list{display:grid;gap:11px;counter-reset:station;margin:16px 0}
+.route-stop{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start;border:1px solid #37649f;background:#0b3366;border-radius:15px;padding:14px}
+.route-number{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:#ff9d1b;color:#071e43;font-weight:900;font-size:18px}
+.route-stop strong{font-size:16px;display:block;margin:0 0 5px}.route-stop .place{font-size:14px;color:#a9ccec}
+.route-additional{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:9px;margin:12px 0 20px}
+.route-help{border:1px solid #406a9a;border-radius:12px;padding:13px;background:#0d3262}
+.route-help strong{display:block;color:#ffbc63;margin-bottom:5px}.route-help span{font-size:13px;color:#c4d7ef;line-height:1.5}
+.route-warning{font-size:13px;color:#bed2ea;line-height:1.5;border-left:3px solid #ff9d1b;padding-left:11px;margin:14px 0}
+@media print{.route-stop,.route-help{border-color:#aaa;background:#fff;color:#111;break-inside:avoid}.route-stop strong,.route-head h3{color:#111}.route-stop .place,.route-help span,.route-warning,.route-desc{color:#333}.route-number{background:#eee;color:#111}.route-help strong{color:#111}.route-list{gap:6px}.route-stop{padding:9px}.route-additional{grid-template-columns:repeat(2,1fr)}}
 </style></head><body>
 <main>
 <div class="top"><span class="tag">UIP · BOOTCAMP 2027</span><a class="btn secondary" href="/">← Volver al Bootcamp</a></div>
@@ -39,6 +52,28 @@ button,.btn{background:var(--naranja);color:#071e43;border:0;border-radius:12px;
 <div class="field"><strong>Equipo</strong><span id="team"></span></div>
 <div class="field"><strong>Fecha de inscripción (Panamá)</strong><span id="createdAt"></span></div>
 </div>
+
+<section id="passportRoute" aria-labelledby="routeTitle">
+<div class="route-head"><h3 id="routeTitle">Mi pasaporte digital · Ruta de estaciones</h3></div>
+<p class="route-desc">BOOTCAMP UIP 2027 · Sábado 14 de noviembre. Consulta el espacio de cada experiencia y presenta tu código QR individual al ingresar. La ruta de rotación particular de cada equipo será confirmada por Coordinación.</p>
+<div class="route-list" id="passportStations">
+<div class="route-stop"><span class="route-number">1</span><div><strong>Tu Yo del 2031</strong><span class="place">Biblioteca PB</span></div></div>
+<div class="route-stop"><span class="route-number">2</span><div><strong>Las 168 horas</strong><span class="place">Restaurante Simulado · Piso 4</span></div></div>
+<div class="route-stop"><span class="route-number">3</span><div><strong>Desafío IA</strong><span class="place">Innovation Hub</span></div></div>
+<div class="route-stop"><span class="route-number">4</span><div><strong>Reto de Resolución de Problemas</strong><span class="place">Mesa en la Plaza de Centro de Conexión</span></div></div>
+<div class="route-stop"><span class="route-number">5</span><div><strong>Mi marca en 60 segundos</strong><span class="place">Espacio de Juegos · PB</span></div></div>
+<div class="route-stop"><span class="route-number">6</span><div><strong>Vive la UIP</strong><span class="place">Plaza Central</span></div></div>
+<div class="route-stop"><span class="route-number">7</span><div><strong>Universidad del Futuro</strong><span class="place">Cabina de TV · S1</span></div></div>
+</div>
+<h3>Otros espacios del recorrido</h3>
+<div class="route-additional">
+<div class="route-help"><strong>Plaza de la Universidad</strong><span>Apertura, integración, estación 6, cierre y reconocimientos</span></div>
+<div class="route-help"><strong>Stand Sembrando Futuro</strong><span>Acreditación, QR, orientación de equipos y acompañamiento</span></div>
+<div class="route-help"><strong>Coffee A Cómodo · PB</strong><span>Coffee Break y Networking Challenge</span></div>
+<div class="route-help"><strong>Plan B · Padres SEED</strong><span>Orientación familiar: pagos, servicios, beneficios y Ecosistema Talento</span></div>
+</div>
+<p class="route-warning">El orden del 1 al 7 identifica las estaciones oficiales, pero no constituye la secuencia individual de rotación de tu equipo. Coordinación confirmará la ruta asignada. El código QR identifica tu registro; no acredita asistencia automáticamente.</p>
+</section>
 <div class="qrbox"><div id="qrcode" aria-label="Código QR individual"></div></div>
 <p class="note" style="text-align:center">Este código identifica tu registro en el Bootcamp. La asistencia y los puntos requieren validación por el equipo organizador. No compartas tu contraseña.</p>
 <div class="actions"><button type="button" id="printBtn">Imprimir / Guardar PDF</button><a class="btn secondary" href="/mis-estaciones.html">Mis estaciones y retos</a><a class="btn secondary" href="/">Volver a mis desafíos</a></div>

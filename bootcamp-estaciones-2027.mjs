@@ -8,13 +8,13 @@ export const MAX_STATION_POINTS = 100;
 export const NETWORKING_BONUS_MAX = 50;
 export const MAX_TOTAL_POINTS = 750;
 export const STATIONS = Object.freeze([
-  {id:1,key:"tu-yo-2031",name:"Tu Yo del 2031",place:"Biblioteca",kind:"individual",evidence:["Pasaporte al 2031","Tres metas","Fortalezas","Recurso académico de biblioteca"]},
-  {id:2,key:"168-horas",name:"Las 168 horas",place:"Restaurante Simulado",kind:"individual",evidence:["Planificación semanal","Distribución del tiempo","Estrategia ante imprevistos"]},
+  {id:1,key:"tu-yo-2031",name:"Tu Yo del 2031",place:"Biblioteca PB",kind:"individual",evidence:["Pasaporte al 2031","Tres metas","Fortalezas","Recurso académico de biblioteca"]},
+  {id:2,key:"168-horas",name:"Las 168 horas",place:"Restaurante Simulado · Piso 4",kind:"individual",evidence:["Planificación semanal","Distribución del tiempo","Estrategia ante imprevistos"]},
   {id:3,key:"desafio-ia",name:"Desafío IA",place:"Innovation Hub",kind:"individual-group",evidence:["Prompt","Respuesta","Verificación","Reflexión de uso responsable"]},
-  {id:4,key:"autoridades-campus-seguro",name:"Conoce tus autoridades y tu campus seguro",place:"Jurídico",kind:"group",evidence:["Casos QR","Autoridades identificadas","Soluciones","Recomendaciones de seguridad"]},
-  {id:5,key:"mi-marca-60",name:"Mi marca en 60 segundos",place:"Salón de Artes",kind:"individual",evidence:["Presentación","Fortalezas","Aspiraciones","Insignia visual","Retroalimentación"]},
-  {id:6,key:"vive-uip",name:"Vive la UIP",place:"Plaza de la Universidad",kind:"group",evidence:["Pasaporte de servicios","Recursos identificados","Situaciones prácticas","Oportunidad seleccionada"]},
-  {id:7,key:"universidad-futuro",name:"Universidad del Futuro",place:"Cabina de TV",kind:"group",evidence:["Problema","Propuesta","Prototipo","Presentación","Enlace audiovisual autorizado"]}
+  {id:4,key:"resolucion-problemas",name:"Reto de Resolución de Problemas",place:"Mesa en la Plaza de Centro de Conexión",kind:"group",evidence:["Problema identificado","Alternativas de solución","Decisión del equipo","Reflexión"]},
+  {id:5,key:"mi-marca-60",name:"Mi marca en 60 segundos",place:"Espacio de Juegos · PB",kind:"individual",evidence:["Presentación","Fortalezas","Aspiraciones","Insignia visual","Retroalimentación"]},
+  {id:6,key:"vive-uip",name:"Vive la UIP",place:"Plaza Central",kind:"group",evidence:["Pasaporte de servicios","Recursos identificados","Situaciones prácticas","Oportunidad seleccionada"]},
+  {id:7,key:"universidad-futuro",name:"Universidad del Futuro",place:"Cabina de TV · S1",kind:"group",evidence:["Problema","Propuesta","Prototipo","Presentación","Enlace audiovisual autorizado"]}
 ]);
 export const ROTATIONS=Object.freeze([
  {round:1,from:"09:00",to:"09:30"},
@@ -64,3 +64,11 @@ export function validateProposal(proposal){
  }
  return {valid:!issues.length,issues,totalAssigned:ids.size};
 }
+
+// Ubicaciones logísticas: no son estaciones adicionales.
+export const SUPPORT_SPACES = Object.freeze([
+ {name:"Plaza de la Universidad",purpose:"Apertura, integración, estación 6, cierre y reconocimientos"},
+ {name:"Stand Sembrando Futuro",purpose:"Acreditación, entrega de QR, orientación de equipos y acompañamiento"},
+ {name:"Coffee A Cómodo · PB",purpose:"Coffee Break y Networking Challenge"},
+ {name:"Plan B · Padres SEED",purpose:"Orientación a familias: pagos, servicios, beneficios y Ecosistema Talento"}
+]);
