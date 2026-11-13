@@ -50,7 +50,7 @@ button,.btn{background:var(--naranja);color:#071e43;border:0;border-radius:12px;
 <div class="field"><strong>Programa / Carrera</strong><span id="career"></span></div>
 <div class="field"><strong>Sede / Procedencia</strong><span id="school"></span></div>
 <div class="field"><strong>Equipo</strong><span id="team"></span></div>
-<div class="field"><strong>Fecha de inscripción (Panamá)</strong><span id="createdAt"></span></div>
+<div class="field"><strong>Fecha de inscripción (Panamá)</strong><span id="createdAt"></span></div><div class="field"><strong>Puntos de inscripción</strong><span id="registrationPoints">—</span></div><div class="field"><strong>Puntos por QR validados</strong><span id="qrPoints">—</span></div><div class="field"><strong>Puntos totales acreditados</strong><span id="totalPoints">—</span></div>
 </div>
 
 <section id="passportRoute" aria-labelledby="routeTitle">
@@ -99,6 +99,25 @@ async function loadOwnPass(){
  el('school').textContent=p.school||'No indicada';
  el('team').textContent=p.is_admin?'Administrador · sin equipo':(p.team||'Pendiente de asignación');
  el('createdAt').textContent=p.created_at?new Date(p.created_at).toLocaleString('es-PA',{timeZone:'America/Panama',dateStyle:'medium',timeStyle:'short'}):'No disponible';
+ if(p.is_admin){
+   el('registrationPoints').textContent='No aplica';
+   el('qrPoints').textContent='No aplica';
+   el('totalPoints').textContent='No aplica';
+ }else{
+   const {data:pts,error:ptError}=await db.from('bootcamp_2027_points_summary')
+     .select('registration_points,station_qr_points,evaluated_points')
+     .eq('user_id',user.id).maybeSingle();
+   if(ptError||!pts){
+     el('registrationPoints').textContent='No disponible';
+     el('qrPoints').textContent='No disponible';
+     el('totalPoints').textContent='No disponible';
+   }else{
+     el('registrationPoints').textContent=pts.registration_points+' / 10';
+     el('qrPoints').textContent=pts.station_qr_points+' / 140';
+     el('totalPoints').textContent=(pts.registration_points+pts.station_qr_points+pts.evaluated_points)+' puntos';
+   }
+ }
+
  el('passMessage').textContent=p.is_admin?'Acceso administrativo verificado':'Registro individual confirmado en Supabase';
  el('qrcode').replaceChildren();
  if(typeof QRCode==='undefined'){hidePrivate();msg('No se pudo cargar el generador QR. Comprueba tu conexión a Internet.',true);return}
