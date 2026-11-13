@@ -4,7 +4,7 @@
 <h1>Mis estaciones y experiencias</h1><p class="muted">Siete estaciones · 14 de noviembre de 2026 · Avances individuales en Supabase. La participación debe validarse por Coordinación.</p>
 <section id="login" class="panel"><h2>Ingresar</h2><p>Utiliza los datos de tu Registro rápido.</p><form id="loginForm"><label>Correo electrónico<input id="email" type="email" autocomplete="username" required></label><label>Contraseña<input id="password" type="password" autocomplete="current-password" required></label><button type="submit">Ingresar</button></form><p id="loginStatus" role="status"></p></section>
 <section id="workspace" class="hidden">
- <section class="panel"><div class="actions" style="justify-content:space-between"><div><h2 id="hello">Mi pasaporte</h2><p id="identity" class="muted"></p></div><span id="role" class="tag"></span></div><div class="details"><div><strong>Equipo actual</strong><span id="team">—</span></div><div><strong>Estaciones enviadas</strong><span id="progress">0 de 7</span></div></div><p id="launchNote" class="muted small"></p></section>
+ <section class="panel"><div class="actions" style="justify-content:space-between"><div><h2 id="hello">Mi pasaporte</h2><p id="identity" class="muted"></p></div><span id="role" class="tag"></span></div><div class="details"><div><strong>Equipo actual</strong><span id="team">—</span></div><div><strong>Estaciones enviadas</strong><span id="progress">0 de 7</span></div><div><strong>Puntos acreditados</strong><span id="pointsTotal">—</span></div><div><strong>Detalle</strong><span id="pointsBreakdown">Inscripción + QR + evaluación</span></div></div><p id="launchNote" class="muted small"></p></section>
  <section class="panel"><h2>Horario de rotaciones</h2><div id="rotations"></div><p class="muted small">La estación que corresponde a cada equipo se confirmará desde Coordinación. El orden mostrado aquí es el horario general, no una asignación de ruta individual.</p></section>
  <section class="panel"><h2>Mis retos y evidencias</h2><p class="muted">Elige una estación, redacta tu evidencia y guarda el avance o envíalo para revisión. No se otorgarán puntos automáticamente.</p><div class="grid" id="stations"></div></section>
  <section id="editor" class="panel hidden"><h2 id="editorTitle">Evidencia</h2><p id="editorGuide"></p><form id="evidenceForm"><label>Respuesta / producto del reto<textarea id="answer" maxlength="12000" required placeholder="Describe tu actividad, resultados, reflexión y evidencias..."></textarea></label><label>Enlace opcional a un producto autorizado<input id="evidenceUrl" type="url" maxlength="1500" placeholder="https://..."></label><p class="muted small">No ingreses contraseñas, información médica ni datos privados de otras personas. Los enlaces externos requieren permisos de acceso adecuados.</p><div class="actions"><button type="button" id="saveDraft">Guardar avance</button><button type="submit">Enviar para revisión</button><button class="secondary" type="button" id="cancel">Cerrar</button></div><p id="saveStatus" role="status"></p></form></section>
@@ -27,6 +27,14 @@ async function refreshEntries(){
  const {data,error}=await client.from('bootcamp_2027_submissions').select('id,station_id,status,answer,evidence_url,updated_at').eq('user_id',user.id);
  if(error)throw error;entries=data||[];
  $('progress').textContent=entries.filter(x=>['submitted','validated'].includes(x.status)).length+' de 7';
+ const {data:points,error:pointsError}=await client.from('bootcamp_2027_points_summary')
+  .select('registration_points,station_qr_points,evaluated_points').eq('user_id',user.id).maybeSingle();
+ if(!pointsError&&points){
+  const total=points.registration_points+points.station_qr_points+points.evaluated_points;
+  $('pointsTotal').textContent=total+' puntos';
+  $('pointsBreakdown').textContent='Registro '+points.registration_points+' · QR '+points.station_qr_points+' · Evaluación '+points.evaluated_points;
+ }else{$('pointsTotal').textContent='No disponibles';}
+
  $('stations').replaceChildren();
  for(const station of STATIONS){
   const entry=entries.find(e=>e.station_id===station.id),card=document.createElement('div');card.className='tile';
@@ -70,17 +78,17 @@ async function renderAdmin(){
  list.append(card)}
 }
 async function evaluate(s,card){
- const values={},names={participation:'Participación (0-20)',collaboration:'Colaboración (0-20)',challenge:'Resolución (0-30)',creativity:'Creatividad (0-20)',reflection:'Reflexión (0-10)'};
+ const values={},names={collaboration:'Colaboración (0-20)',challenge:'Resolución (0-30)',creativity:'Creatividad (0-20)',reflection:'Reflexión (0-10)'};
  for(const [k,max] of Object.entries(RUBRIC)){
  const v=prompt(names[k],String(max));if(v===null)return;
  if(!/^\d+$/.test(v)||Number(v)>max){alert('Puntuación inválida para '+names[k]);return}values[k]=Number(v);
  }
  const feedback=prompt('Retroalimentación (opcional)','');if(feedback===null)return;
- const {error}=await client.from('bootcamp_2027_scores').upsert({submission_id:s.id,participation:values.participation,collaboration:values.collaboration,challenge:values.challenge,creativity:values.creativity,reflection:values.reflection,feedback},{onConflict:'submission_id'});
+ const {error}=await client.from('bootcamp_2027_scores').upsert({submission_id:s.id,participation:0,collaboration:values.collaboration,challenge:values.challenge,creativity:values.creativity,reflection:values.reflection,feedback},{onConflict:'submission_id'});
  if(error){alert('No se pudo guardar la evaluación: '+error.message);return}
  const {error:e2}=await client.from('bootcamp_2027_submissions').update({status:'validated'}).eq('id',s.id);
  if(e2){alert('Se guardó la rúbrica, pero no la validación: '+e2.message);return}
- card.remove();alert('Evaluación registrada: '+Object.values(values).reduce((a,b)=>a+b,0)+'/100');
+ card.remove();alert('Evaluación registrada: '+Object.values(values).reduce((a,b)=>a+b,0)+'/80 en criterios académicos. Los 20 de participación se suman exclusivamente al validar el QR.');
 }
 async function initialize(){
  if(!window.supabase||!window.BOOTCAMP_SUPABASE_URL||!window.BOOTCAMP_SUPABASE_ANON_KEY){msg('status','No fue posible cargar la conexión de Supabase.',true);return}
