@@ -38,6 +38,8 @@ const bucket='bootcamp-2027-operacion-campus',ext={'image/jpeg':'jpg','image/png
 if(!window.supabase||!window.BOOTCAMP_SUPABASE_URL||!window.BOOTCAMP_SUPABASE_ANON_KEY){say('status','No se pudo conectar con Supabase.');return}
 const db=window.supabase.createClient(window.BOOTCAMP_SUPABASE_URL,window.BOOTCAMP_SUPABASE_ANON_KEY);
 let user=null,profile=null,admin=false,records=[],photoList=[],selected=0,adminRecords=[];
+const requestedMission=Number(new URLSearchParams(location.search).get('reto'));
+const validRequestedMission=Number.isInteger(requestedMission)&&requestedMission>=1&&requestedMission<=4;
 function status(t){say('status',t)}
 function stateText(s){return {draft:'Borrador',submitted:'Enviado',in_review:'En revisión',validated:'Validado',needs_correction:'Requiere corrección'}[s]||'Pendiente'}
 async function refresh(){
@@ -149,8 +151,9 @@ async function enter(){
  show('loginPanel',false);show('workspace',true);show('logout',true);show('adminPanel',admin);
  if(admin){show('missionEditor',false);show('missionList',false);await adminReload();status('Panel de revisión.');return}
  if(!p.team){show('workspace',false);status('Aún no tienes equipo asignado. Solicita confirmación a Coordinación.');return}
- say('greeting','Hola, '+p.full_name);say('teamInfo','Equipo: '+p.team+' · Los integrantes comparten respuestas y fotografías.');
- await refresh();status('Operación Campus lista. Las evidencias deben ser validadas por Coordinación.');
+ show('missionList',true);say('greeting','Hola, '+p.full_name);say('teamInfo','Equipo: '+p.team+' · Los integrantes comparten respuestas y fotografías.');
+ await refresh();if(validRequestedMission)await openMission(requestedMission);
+ status('Operación Campus lista. Las evidencias deben ser validadas por Coordinación.');
 }
 $('loginForm').onsubmit=async e=>{e.preventDefault();const {error}=await db.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error){status('No se pudo ingresar. Revisa tus credenciales.');return}$('password').value='';await enter()};
 $('logout').onclick=async()=>{await db.auth.signOut();user=null;profile=null;admin=false;show('missionEditor',false);await enter()};
