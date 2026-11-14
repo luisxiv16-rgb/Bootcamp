@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const nav = document.getElementById('nav');
   if (!nav) return;
   [
+    { id: 'registro-rapido-2027', label: 'Registro rápido de participantes', path: '/registro-rapido.html', symbol: '✓' },
     { id: 'mi-registro-qr-2027', label: 'Mi registro y QR', path: '/mi-registro.html', symbol: '▦' },
     { id: 'mis-estaciones-2027', label: 'Mis estaciones 2027', path: '/mis-estaciones.html', symbol: '✦' },
     { id: 'asistencia-general-2027', label: 'Registrar asistencia', path: '/asistencia.html', symbol: '✓' }
