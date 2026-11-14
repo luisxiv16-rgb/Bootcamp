@@ -1,5 +1,5 @@
 <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ruta de estaciones | Bootcamp UIP 2027</title>
-<style>:root{color-scheme:dark;--navy:#071e43;--accent:#ff9d1b;--edge:#37649f}*{box-sizing:border-box}body{font:16px Arial,Helvetica,sans-serif;background:radial-gradient(circle at top left,#194979 0%,#092454 44%,#04152c 100%);color:#f2f7ff;margin:0;min-height:100vh}main{max-width:1060px;padding:24px;margin:auto}header{display:flex;justify-content:space-between;flex-wrap:wrap;align-items:center;gap:12px;border-bottom:1px solid #37649f;padding-bottom:15px}.kicker{color:var(--accent);font-weight:800;letter-spacing:.08em}h1{font-size:clamp(27px,4vw,42px);margin:22px 0 8px}h2{margin-top:0}p{line-height:1.6}.muted{color:#b8ceeb}.panel{border:1px solid var(--edge);border-radius:20px;background:#082750;padding:22px;margin:18px 0;box-shadow:0 10px 25px #0003}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px}.tile{border:1px solid #37649f;background:#0c3164;border-radius:16px;padding:18px}.tile h3{margin:8px 0}.tile p{margin:7px 0}.tag{font-size:12px;background:#204b79;border-radius:20px;padding:5px 9px;display:inline-block}.tag.orange{background:#ffc46b;color:#112849}button,.btn{border:0;border-radius:11px;background:var(--accent);color:#102443;font-weight:800;padding:12px 16px;cursor:pointer;text-decoration:none;font-size:15px;display:inline-block}.secondary{border:1px solid #6b94c4;background:transparent;color:white}.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0}input,textarea,select{width:100%;display:block;padding:13px;font:inherit;border:1px solid #6b94c4;border-radius:10px;background:#061936;color:white;margin:7px 0 15px}textarea{min-height:180px;resize:vertical}label{font-weight:700}.hidden{display:none!important}.error{color:#ffb6b6}.success{color:#9aeecb}.line{height:1px;background:#315989;margin:15px 0}.details{display:grid;grid-template-columns:1fr 1fr;gap:10px}.details>div{padding:10px;background:#0d356b;border-radius:10px}.details strong{display:block;color:#a9c9e7;font-size:12px;margin-bottom:6px}.small{font-size:13px}.rot{display:grid;grid-template-columns:80px 1fr 1fr;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid #325984}.rot b{color:#ffbf60}@media(max-width:610px){.details{grid-template-columns:1fr}.rot{grid-template-columns:60px 1fr}.rot span:last-child{grid-column:2}}</style></head>
+<style>:root{color-scheme:dark;--navy:#071e43;--accent:#ff9d1b;--edge:#37649f}*{box-sizing:border-box}body{font:16px Arial,Helvetica,sans-serif;background:radial-gradient(circle at top left,#194979 0%,#092454 44%,#04152c 100%);color:#f2f7ff;margin:0;min-height:100vh}main{max-width:1060px;padding:24px;margin:auto}header{display:flex;justify-content:space-between;flex-wrap:wrap;align-items:center;gap:12px;border-bottom:1px solid #37649f;padding-bottom:15px}.kicker{color:var(--accent);font-weight:800;letter-spacing:.08em}h1{font-size:clamp(27px,4vw,42px);margin:22px 0 8px}h2{margin-top:0}p{line-height:1.6}.muted{color:#b8ceeb}.panel{border:1px solid var(--edge);border-radius:20px;background:#082750;padding:22px;margin:18px 0;box-shadow:0 10px 25px #0003}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px}.tile{border:1px solid #37649f;background:#0c3164;border-radius:16px;padding:18px}.tile h3{margin:8px 0}.tile p{margin:7px 0}.tag{font-size:12px;background:#204b79;border-radius:20px;padding:5px 9px;display:inline-block}.tag.orange{background:#ffc46b;color:#112849}button,.btn{border:0;border-radius:11px;background:var(--accent);color:#102443;font-weight:800;padding:12px 16px;cursor:pointer;text-decoration:none;font-size:15px;display:inline-block}.secondary{border:1px solid #6b94c4;background:transparent;color:white}.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0}input,textarea,select{width:100%;display:block;padding:13px;font:inherit;border:1px solid #6b94c4;border-radius:10px;background:#061936;color:white;margin:7px 0 15px}textarea{min-height:180px;resize:vertical}label{font-weight:700}.hidden{display:none!important}.error{color:#ffb6b6}.success{color:#9aeecb}.line{height:1px;background:#315989;margin:15px 0}.details{display:grid;grid-template-columns:1fr 1fr;gap:10px}.details>div{padding:10px;background:#0d356b;border-radius:10px}.details strong{display:block;color:#a9c9e7;font-size:12px;margin-bottom:6px}.small{font-size:13px}.rot{display:grid;grid-template-columns:80px 1fr 1fr;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid #325984}.rot b{color:#ffbf60}@media(max-width:610px){.details{grid-template-columns:1fr}.rot{grid-template-columns:60px 1fr}.rot span:last-child{grid-column:2}}.photoGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:11px;margin:12px 0}.photoTile{border:1px solid #4a7ab3;background:#0a2e5b;border-radius:12px;padding:8px}.photoTile img{width:100%;height:115px;object-fit:cover;border-radius:8px}.photoTile a{display:block;overflow-wrap:anywhere;color:#ffd38a;font-size:12px;margin-top:6px}.photoTile small{display:block;color:#b8cce9;margin-top:4px}.fileHelp{font-size:13px;color:#c7d8ee;margin:7px 0}</style></head>
 <body><main><header><span class="kicker">UIP · BOOTCAMP 2027</span><nav class="actions"><a class="btn secondary" href="/">Inicio</a><a class="btn secondary" href="/mi-registro.html">Mi QR y registro</a><button type="button" id="logout" class="secondary hidden">Cerrar sesión</button></nav></header>
 <h1>Mis estaciones y experiencias</h1><p class="muted">Siete estaciones · 14 de noviembre de 2026 · Avances individuales en Supabase. La participación debe validarse por Coordinación.</p>
 <section id="login" class="panel"><h2>Ingresar</h2><p>Utiliza los datos de tu Registro rápido.</p><form id="loginForm"><label>Correo electrónico<input id="email" type="email" autocomplete="username" required></label><label>Contraseña<input id="password" type="password" autocomplete="current-password" required></label><button type="submit">Ingresar</button></form><p id="loginStatus" role="status"></p></section>
@@ -7,14 +7,16 @@
  <section class="panel"><div class="actions" style="justify-content:space-between"><div><h2 id="hello">Mi pasaporte</h2><p id="identity" class="muted"></p></div><span id="role" class="tag"></span></div><div class="details"><div><strong>Equipo actual</strong><span id="team">—</span></div><div><strong>Estaciones enviadas</strong><span id="progress">0 de 7</span></div><div><strong>Puntos acreditados</strong><span id="pointsTotal">—</span></div><div><strong>Detalle</strong><span id="pointsBreakdown">Inscripción + QR + evaluación</span></div></div><p id="launchNote" class="muted small"></p></section>
  <section class="panel"><h2>Horario de rotaciones</h2><div id="rotations"></div><p class="muted small">La estación que corresponde a cada equipo se confirmará desde Coordinación. El orden mostrado aquí es el horario general, no una asignación de ruta individual.</p></section>
  <section class="panel"><h2>Mis retos y evidencias</h2><p class="muted">Elige una estación, redacta tu evidencia y guarda el avance o envíalo para revisión. No se otorgarán puntos automáticamente.</p><div class="grid" id="stations"></div></section>
- <section id="editor" class="panel hidden"><h2 id="editorTitle">Evidencia</h2><p id="editorGuide"></p><form id="evidenceForm"><label>Respuesta / producto del reto<textarea id="answer" maxlength="12000" required placeholder="Describe tu actividad, resultados, reflexión y evidencias..."></textarea></label><label>Enlace opcional a un producto autorizado<input id="evidenceUrl" type="url" maxlength="1500" placeholder="https://..."></label><p class="muted small">No ingreses contraseñas, información médica ni datos privados de otras personas. Los enlaces externos requieren permisos de acceso adecuados.</p><div class="actions"><button type="button" id="saveDraft">Guardar avance</button><button type="submit">Enviar para revisión</button><button class="secondary" type="button" id="cancel">Cerrar</button></div><p id="saveStatus" role="status"></p></form></section>
+ <section id="editor" class="panel hidden"><h2 id="editorTitle">Evidencia</h2><p id="editorGuide"></p><form id="evidenceForm"><label>Respuesta / producto del reto<textarea id="answer" maxlength="12000" required placeholder="Describe tu actividad, resultados, reflexión y evidencias..."></textarea></label><label>Enlace opcional a un producto autorizado<input id="evidenceUrl" type="url" maxlength="1500" placeholder="https://..."></label><p class="muted small">No ingreses contraseñas, información médica ni datos privados de otras personas. Los enlaces externos requieren permisos de acceso adecuados.</p><div class="line"></div><h3>Fotografías del reto</h3><p class="fileHelp">Adjunta hasta 5 fotos JPG, PNG o WebP (máximo 5 MB cada una). Solo tú y Coordinación podrán verlas. No subas imágenes de terceros sin su autorización.</p><label>Seleccionar fotografías<input id="photoInput" type="file" accept="image/jpeg,image/png,image/webp" multiple></label><div class="actions"><button type="button" id="uploadPhotos">Subir fotografías</button><span id="photoCount" class="muted small">0 de 5</span></div><div id="photoGallery" class="photoGrid" aria-live="polite"></div><p id="photoStatus" role="status"></p><div class="actions"><button type="button" id="saveDraft">Guardar avance</button><button type="submit">Enviar para revisión</button><button class="secondary" type="button" id="cancel">Cerrar</button></div><p id="saveStatus" role="status"></p></form></section>
  <section id="adminPanel" class="panel hidden"><h2>Coordinación · revisión</h2><p class="muted">Solo cuentas administrativas verificadas. Evaluación sobre 100 puntos; enviar evidencias no concede calificación.</p><div id="adminList"></div></section>
 </section><p id="status" role="status"></p></main>
 <script src="/config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script type="module">
 import {STATIONS,ROTATIONS,RUBRIC} from '/bootcamp-estaciones-2027.mjs';
 const $=id=>document.getElementById(id),escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let client,user,profile,isAdmin=false,entries=[],chosen=null;
+let client,user,profile,isAdmin=false,entries=[],chosen=null,photos=[];
+const PHOTO_BUCKET='bootcamp-2027-evidencias',MAX_PHOTOS=5,MAX_PHOTO_BYTES=5*1024*1024;
+const MIME_EXT={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'};
 const launch=Date.parse('2026-11-14T08:00:00-05:00');
 const msg=(id,message,err=false)=>{$(id).textContent=message;$(id).className=err?'error':'success';};
 const show=(id,on)=>$(id).classList.toggle('hidden',!on);
@@ -50,7 +52,82 @@ function openEditor(station,entry){
  $('answer').value=entry?.answer||'';$('evidenceUrl').value=entry?.evidence_url||'';
  const locked=entry&&['validated','submitted'].includes(entry.status);
  $('answer').disabled=!!locked;$('evidenceUrl').disabled=!!locked;$('saveDraft').disabled=!!locked;$('evidenceForm').querySelector('button[type=submit]').disabled=!!locked;
+ $('photoInput').value='';$('photoInput').disabled=!!locked;$('uploadPhotos').disabled=!!locked;
+ $('photoGallery').replaceChildren();msg('photoStatus','');
+ refreshPhotos().catch(e=>msg('photoStatus','No se pudieron cargar las fotos: '+e.message,true));
  msg('saveStatus',locked?'Entrega enviada; consulta y revisión disponibles.':'');show('editor',true);$('editor').scrollIntoView({behavior:'smooth'});
+}
+
+async function renderPhotoCards(items,container){
+ container.replaceChildren();
+ for(const p of items){
+  const card=document.createElement('div');card.className='photoTile';
+  const {data,error}=await client.storage.from(PHOTO_BUCKET).createSignedUrl(p.object_path,600);
+  if(error){const txt=document.createElement('small');txt.textContent='Foto no disponible';card.append(txt)}
+  else{
+   const img=document.createElement('img');img.loading='lazy';img.alt='Fotografía del reto';img.src=data.signedUrl;card.append(img);
+   const link=document.createElement('a');link.href=data.signedUrl;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Ver fotografía';card.append(link);
+  }
+  const name=document.createElement('small');name.textContent=p.file_name||'Imagen adjunta';card.append(name);
+  container.append(card);
+ }
+}
+async function refreshPhotos(){
+ if(!chosen||!user)return;
+ const stationId=chosen.station.id;
+ const {data,error}=await client.from('bootcamp_2027_photos').select('id,object_path,file_name,created_at')
+  .eq('user_id',user.id).eq('station_id',stationId).order('created_at');
+ if(error)throw error;
+ if(!chosen||chosen.station.id!==stationId)return;
+ photos=data||[];$('photoCount').textContent=photos.length+' de '+MAX_PHOTOS;
+ await renderPhotoCards(photos,$('photoGallery'));
+}
+async function uploadPhotos(){
+ if(!chosen||!user)return;
+ const locked=chosen.entry&&['submitted','validated'].includes(chosen.entry.status);
+ if(locked){msg('photoStatus','La entrega ya fue enviada; no se pueden modificar sus evidencias.',true);return}
+ const files=Array.from($('photoInput').files||[]);
+ if(!files.length){msg('photoStatus','Selecciona una o más fotografías.',true);return}
+ if(photos.length+files.length>MAX_PHOTOS){msg('photoStatus','Máximo '+MAX_PHOTOS+' fotos por estación; ya tienes '+photos.length+'.',true);return}
+ for(const file of files){
+  if(!MIME_EXT[file.type]||file.size>MAX_PHOTO_BYTES||file.size===0){msg('photoStatus','Archivo no admitido: '+file.name+' (JPG, PNG o WebP, hasta 5 MB).',true);return}
+ }
+ $('uploadPhotos').disabled=true;$('photoInput').disabled=true;
+ let done=0;
+ try{
+  for(const file of files){
+   const objectPath=user.id+'/'+chosen.station.id+'/'+crypto.randomUUID()+'.'+MIME_EXT[file.type];
+   msg('photoStatus','Subiendo '+(done+1)+' de '+files.length+'…');
+   const uploaded=await client.storage.from(PHOTO_BUCKET).upload(objectPath,file,{contentType:file.type,upsert:false});
+   if(uploaded.error)throw uploaded.error;
+   const saved=await client.from('bootcamp_2027_photos').insert({user_id:user.id,station_id:chosen.station.id,object_path:objectPath,file_name:file.name.slice(0,180)});
+   if(saved.error){
+    await client.storage.from(PHOTO_BUCKET).remove([objectPath]);
+    throw saved.error;
+   }
+   done++;
+  }
+  $('photoInput').value='';
+  await refreshPhotos();
+  msg('photoStatus','Se guardaron '+done+' fotografía(s) en tu evidencia. Puedes enviar el reto cuando esté listo.');
+ }catch(e){
+  await refreshPhotos().catch(()=>{});
+  msg('photoStatus','Se subieron '+done+' foto(s). Error: '+e.message,true);
+ }finally{
+  const shouldLock=chosen.entry&&['submitted','validated'].includes(chosen.entry.status);
+  $('uploadPhotos').disabled=!!shouldLock;$('photoInput').disabled=!!shouldLock;
+ }
+}
+async function showAdminPhotos(p,card){
+ let area=card.querySelector('.adminPhotos');
+ if(!area){area=document.createElement('div');area.className='adminPhotos photoGrid';card.append(area)}
+ area.textContent='Cargando fotografías…';
+ const {data,error}=await client.from('bootcamp_2027_photos')
+  .select('id,object_path,file_name,created_at')
+  .eq('user_id',p.user_id).eq('station_id',p.station_id).order('created_at');
+ if(error){area.textContent='No se pudieron cargar las fotografías.';return}
+ if(!data?.length){area.textContent='Sin fotografías adjuntas.';return}
+ await renderPhotoCards(data,area);
 }
 async function save(status){
  if(!chosen)return;const ans=$('answer').value.trim();if(!ans){msg('saveStatus','Escribe la evidencia antes de continuar.',true);return}
@@ -74,6 +151,7 @@ async function renderAdmin(){
  if(!data.length){list.textContent='Todavía no hay entregas.';return}
  for(const s of data){const card=document.createElement('div');card.className='tile';card.style.marginBottom='12px';
  card.innerHTML='<b>Estación '+s.station_id+'</b> · '+escapeHTML(s.status)+'<p class="small">Participante: '+escapeHTML(s.user_id)+'</p><p class="muted">'+escapeHTML(s.answer.slice(0,650))+'</p>';
+ const photoBtn=document.createElement('button');photoBtn.type='button';photoBtn.className='secondary';photoBtn.textContent='Ver fotografías';photoBtn.onclick=()=>showAdminPhotos(s,card);card.append(photoBtn);
  if(s.status==='submitted'||s.status==='needs_correction'){const btn=document.createElement('button');btn.textContent='Evaluar';btn.onclick=()=>evaluate(s,card);card.append(btn)}
  list.append(card)}
 }
@@ -113,6 +191,7 @@ async function initialize(){
  if(error){msg('loginStatus','No se pudo ingresar. Comprueba tus credenciales y confirma tu correo.',true);return}
  $('password').value='';await enter();msg('loginStatus','')});
  $('logout').onclick=async()=>{await client.auth.signOut();user=null;profile=null;isAdmin=false;entries=[];show('editor',false);show('adminPanel',false);await enter()};
+ $('uploadPhotos').onclick=uploadPhotos;
  $('saveDraft').onclick=()=>save('draft');$('evidenceForm').addEventListener('submit',e=>{e.preventDefault();save('submitted')});$('cancel').onclick=()=>show('editor',false);
  await enter();
 }
