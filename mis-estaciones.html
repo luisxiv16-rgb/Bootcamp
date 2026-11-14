@@ -31,11 +31,11 @@ async function refreshEntries(){
  if(error)throw error;entries=data||[];
  $('progress').textContent=entries.filter(x=>['submitted','validated'].includes(x.status)).length+' de 7';
  const {data:points,error:pointsError}=await client.from('bootcamp_2027_points_summary')
-  .select('registration_points,station_qr_points,evaluated_points').eq('user_id',user.id).maybeSingle();
+  .select('registration_points,station_qr_points,evaluated_points,campus_station4_points,total_points').eq('user_id',user.id).maybeSingle();
  if(!pointsError&&points){
-  const total=points.registration_points+points.station_qr_points+points.evaluated_points;
+  const total=points.total_points;
   $('pointsTotal').textContent=total+' puntos';
-  $('pointsBreakdown').textContent='Registro '+points.registration_points+' · QR '+points.station_qr_points+' · Evaluación '+points.evaluated_points;
+  $('pointsBreakdown').textContent='Registro '+points.registration_points+' · QR '+points.station_qr_points+' · Evaluación '+points.evaluated_points+' · Operación Campus '+points.campus_station4_points;
  }else{$('pointsTotal').textContent='No disponibles';}
 
  $('stations').replaceChildren();
