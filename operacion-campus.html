@@ -16,7 +16,7 @@ header{display:flex;justify-content:space-between;align-items:center;gap:12px;fl
  <section class="card hidden" id="missionEditor"><div class="row"><h2 id="missionTitle"></h2><button type="button" id="closeEditor" class="secondary">Cerrar</button></div><p id="missionPlace" class="sub"></p><div class="cue" id="missionCipher"></div><p><strong>Pregunta del desafío</strong></p><p id="missionQuestion" class="sub"></p><form id="missionForm"><div id="fields"></div>
  <h3>Fotografías y evidencias</h3><p class="muted">Hasta cinco fotos JPG, PNG o WebP por reto; máximo 10 MB cada una. Comparte imágenes de personas solo con autorización. Si alguien no autoriza fotografías, registra la evidencia alternativa en el campo indicado.</p>
  <label>Autorización para uso de las fotografías en la evaluación del Bootcamp <input id="photoConsent" type="checkbox" style="width:auto;margin-left:8px"></label>
- <label>Tomar fotografía o subir imagen<input id="photoFiles" type="file" accept="image/jpeg,image/png,image/webp" capture="environment" multiple></label>
+ <label>Tomar fotografía o subir imagen<input id="photoFiles" type="file" accept="image/jpeg,image/png,image/webp" multiple></label>
  <div class="actions"><button type="button" id="upload">Subir fotografías</button><span class="muted" id="photoCounter">0 / 5</span></div>
  <div class="photos" id="gallery"></div>
  <label>Evidencia alternativa / consentimiento no otorgado<textarea id="alternative" placeholder="Describe la evidencia alternativa cuando no se autorice fotografiar."></textarea></label>
@@ -54,7 +54,7 @@ async function refresh(){
  const tag=document.createElement('span');tag.className='pill';tag.textContent='RETO '+m.id+' · 25 PUNTOS';card.append(tag);
  const heading=document.createElement('h3');heading.textContent=m.name;card.append(heading);
  const p=document.createElement('p');p.className='sub';p.textContent=m.place+' · '+stateText(record?.status);card.append(p);
- const btn=document.createElement('button');btn.textContent=record?.status==='validated'?'Ver reto validado':'Abrir reto';btn.onclick=()=>openMission(m.id);card.append(btn);area.append(card)}
+ const btn=document.createElement('button');btn.textContent=record?.status==='validated'?'Ver reto validado':'Abrir reto';btn.onclick=()=>openMission(m.id);card.append(btn);const link=document.createElement('a');link.className='btn secondary';link.style.marginLeft='8px';link.href='/operacion-campus.html?reto='+m.id;link.textContent='Enlace QR';card.append(link);area.append(card)}
 }
 async function getPhotos(team,mission,container,canDelete=false){
  const {data,error}=await db.from('bootcamp_2027_campus_photos').select('id,object_path,file_name,uploader_id').eq('team',team).eq('mission',mission).order('created_at');
@@ -112,7 +112,7 @@ async function upload(){
  try{for(const file of files){const blob=await compress(file),extension=blob.type==='image/jpeg'?'jpg':ext[blob.type];
  const path=user.id+'/4/'+selected+'/'+crypto.randomUUID()+'.'+extension;
  const up=await db.storage.from(bucket).upload(path,blob,{contentType:blob.type,upsert:false});if(up.error)throw up.error;
- const ins=await db.from('bootcamp_2027_campus_photos').insert({team:profile.team,mission:selected,uploader_id:user.id,object_path:path,file_name:file.name.slice(0,170)});
+ const ins=await db.from('bootcamp_2027_campus_photos').insert({team:profile.team,mission:selected,uploader_id:user.id,object_path:path,file_name:file.name.slice(0,170),consent_confirmed:true});
  if(ins.error){await db.storage.from(bucket).remove([path]);throw ins.error}loaded++}
  await getPhotos(profile.team,selected,$('gallery'),true);$('photoFiles').value='';say('editorStatus','Fotografías guardadas: '+loaded);
  }catch(e){say('editorStatus','Subidas '+loaded+'. Error: '+e.message)}finally{$('upload').disabled=false}
@@ -124,7 +124,7 @@ async function adminReload(){
  const area=$('adminItems');area.replaceChildren();
  for(const r of data){const card=document.createElement('div');card.className='admin-item';
  const h=document.createElement('h3');h.textContent=r.team+' · Reto '+r.mission+' · '+stateText(r.status);card.append(h);
- const p=document.createElement('p');p.className='muted';p.textContent='Envío: '+(r.submitted_at||'Sin envío')+' · Revisión: '+(r.reviewed_at||'Pendiente');card.append(p);
+ const p=document.createElement('p');p.className='muted';p.textContent='Envío: '+(r.submitted_at||'Sin envío')+' · Revisión: '+(r.reviewed_at||'Pendiente');card.append(p);const review=document.createElement('p');review.className='muted';review.textContent='Validador: '+(r.reviewed_by||'Pendiente')+' · Observaciones: '+(r.feedback||'Sin observaciones');card.append(review);
  for(const [k,v] of Object.entries(r.answers||{})){const line=document.createElement('p');line.textContent=k+': '+v;card.append(line)}
  const gallery=document.createElement('div');gallery.className='photos';card.append(gallery);
  const picBtn=document.createElement('button');picBtn.type='button';picBtn.className='secondary';picBtn.textContent='Ver fotografías';picBtn.onclick=()=>getPhotos(r.team,r.mission,gallery);card.append(picBtn);
@@ -135,7 +135,13 @@ async function adminReload(){
  if(!confirm('¿Confirmas '+name+' para el reto '+r.mission+' de '+r.team+'?'))return;
  const {data:ok,error:e}=await db.rpc('bootcamp_2027_campus_review',{p_team:r.team,p_mission:r.mission,p_action:value,p_feedback:feedback});
  if(e||!ok){alert(e?.message||'No se pudo validar');return}await adminReload()};actions.append(b)}
- card.append(actions)}area.append(card)}
+ card.append(actions)} const logs=document.createElement('div');logs.className='muted';card.append(logs);
+ const history=document.createElement('button');history.className='secondary';history.type='button';history.textContent='Historial';history.onclick=async()=>{
+  const {data:events,error:err}=await db.from('bootcamp_2027_campus_review_log').select('previous_status,new_status,reviewed_at,feedback,reviewed_by').eq('team',r.team).eq('mission',r.mission).order('reviewed_at',{ascending:false});
+  logs.replaceChildren();if(err){logs.textContent=err.message;return}
+  for(const e of events||[]){const row=document.createElement('p');row.textContent=e.reviewed_at+' · '+stateText(e.previous_status)+' → '+stateText(e.new_status)+' · '+(e.feedback||'Sin observaciones')+' · Responsable: '+e.reviewed_by;logs.append(row)}
+ };card.append(history);
+area.append(card)}
 }
 function exportCsv(){
  const esc=v=>'"'+String(v??'').replace(/"/g,'""').replace(/^[=+@-]/,'\u0027$&')+'"';
