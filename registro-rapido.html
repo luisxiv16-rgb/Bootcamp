@@ -1,0 +1,63 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Registro rápido · Bootcamp UIP 2027</title>
+<style>:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top left,#16447f,#061631 65%);font:16px Arial,sans-serif;color:#edf5ff;min-height:100vh}main{max-width:660px;margin:auto;padding:22px}header{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:15px 0;border-bottom:1px solid #396ca5}h1{font-size:clamp(26px,5vw,39px)}.brand{color:#ffad36;font-weight:900}.card{padding:25px;border:1px solid #4478b4;border-radius:20px;background:#092955;margin-top:22px}.note{color:#c0d5ee;line-height:1.6}label{display:block;margin-top:15px;font-weight:bold}input{width:100%;margin-top:7px;padding:14px;border:1px solid #6c92c4;border-radius:10px;background:#04162f;color:white;font:inherit}button,.btn{display:inline-block;border:0;padding:14px 20px;margin-top:16px;border-radius:10px;font-size:15px;font-weight:800;background:#ff9d1b;color:#071e43;cursor:pointer;text-decoration:none}button:disabled{opacity:.6}.secondary{background:transparent;color:white;border:1px solid #668cb8}.hidden{display:none}.warning{padding:13px;margin-top:15px;border-radius:10px;background:#13396e;border-left:4px solid #ff9d1b}.success{color:#9ff5cd}.error{color:#ffb3b3}</style></head><body><main>
+<header><span class="brand">BOOTCAMP UIP 2027</span><a href="/" class="btn secondary">Inicio</a></header>
+<h1>Registro rápido de participantes</h1><p class="note">Registra tu cuenta o ingresa si ya te inscribiste. El sistema conservará tu inscripción, equipo y puntuación.</p>
+<section class="card" id="signupSection"><h2>Crear mi cuenta</h2><form id="signup">
+<label>Nombre completo<input id="fullName" autocomplete="name" required minlength="2" maxlength="180"></label>
+<label>Correo electrónico<input id="email" type="email" autocomplete="email" required></label>
+<label>Contraseña personal (mínimo 8 caracteres)<input id="password" type="password" autocomplete="new-password" minlength="8" required></label>
+<label>Confirmar contraseña<input id="confirm" type="password" autocomplete="new-password" minlength="8" required></label>
+<label>Carrera de interés<input id="career" required minlength="2" maxlength="220" placeholder="Ej. Psicología, Arquitectura, Medicina"></label>
+<label>Procedencia o sede (opcional)<input id="school" maxlength="180"></label>
+<label class="note"><input id="consent" type="checkbox" required style="width:auto"> Acepto el tratamiento de mis datos para la gestión del Bootcamp UIP.</label>
+<button id="submitSignup" type="submit">Crear mi registro</button></form></section>
+<section class="card"><h2>Ya tengo cuenta</h2><form id="login">
+<label>Correo electrónico<input id="loginEmail" type="email" autocomplete="username" required></label>
+<label>Contraseña<input id="loginPassword" type="password" autocomplete="current-password" required></label>
+<button type="submit" id="submitLogin">Ingresar y recuperar mi registro</button></form>
+<p class="note">Si recibiste un correo de confirmación, confirma tu dirección antes de iniciar sesión. No necesitas crear otra cuenta.</p></section>
+<section id="result" class="warning" role="status" aria-live="polite">Tus datos se guardan en Supabase.</section>
+</main><script src="/config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script>
+(async()=>{'use strict';const el=id=>document.getElementById(id),tell=(s,error=false)=>{el('result').textContent=s;el('result').className='warning '+(error?'error':'success')};
+if(!window.supabase||!window.BOOTCAMP_SUPABASE_URL||!window.BOOTCAMP_SUPABASE_ANON_KEY){tell('Error de conexión al sistema. Recarga la página.',true);return}
+const db=window.supabase.createClient(window.BOOTCAMP_SUPABASE_URL,window.BOOTCAMP_SUPABASE_ANON_KEY);
+async function completeProfile(user,details){
+ if(!user)throw Error('Es necesario ingresar para completar el perfil.');
+ const existing=await db.from('bootcamp_profiles').select('id').eq('id',user.id).maybeSingle();
+ if(existing.error)throw existing.error;
+ if(existing.data)return;
+ const meta=user.user_metadata||{};
+ const name=(details?.full_name||meta.full_name||'').trim();
+ const career=(details?.career||meta.career||'').trim();
+ const school=(details?.school||meta.school||'').trim();
+ if(name.length<2||career.length<2)throw Error('No encontramos nombre y carrera en la cuenta. Contacta a Coordinación para completar el registro.');
+ const {error}=await db.from('bootcamp_profiles').insert({id:user.id,full_name:name,email:user.email,career,school:school||null,is_admin:false,team:null});
+ if(error&&error.code!=='23505')throw error;
+}
+el('signup').addEventListener('submit',async e=>{
+ e.preventDefault();const btn=el('submitSignup');btn.disabled=true;
+ try{
+ if(el('password').value!==el('confirm').value)throw Error('Las contraseñas no coinciden.');
+ const details={full_name:el('fullName').value.trim(),career:el('career').value.trim(),school:el('school').value.trim()};
+ const email=el('email').value.trim().toLowerCase();
+ tell('Registrando tu cuenta…');
+ const {data,error}=await db.auth.signUp({email,password:el('password').value,options:{data:details,emailRedirectTo:location.origin+'/registro-rapido.html'}});
+ if(error)throw error;
+ if(data?.session?.user){await completeProfile(data.session.user,details);tell('¡Cuenta creada! Tu perfil está listo. Abriendo tu pasaporte…');location.href='/mi-registro.html';return}
+ tell('Solicitud recibida. Si tu correo requiere confirmación, abre el mensaje recibido y vuelve aquí para ingresar. Usa la misma contraseña que elegiste; no crees otra cuenta.');
+ }catch(err){tell('No se pudo completar el registro: '+err.message+' Si ya tienes cuenta, usa el formulario de ingreso.',true)}
+ finally{btn.disabled=false;el('password').value='';el('confirm').value=''}
+});
+el('login').addEventListener('submit',async e=>{
+ e.preventDefault();const btn=el('submitLogin');btn.disabled=true;
+ try{
+ tell('Verificando cuenta…');
+ const {data,error}=await db.auth.signInWithPassword({email:el('loginEmail').value.trim().toLowerCase(),password:el('loginPassword').value});
+ if(error)throw error;
+ await completeProfile(data.user);
+ tell('¡Acceso correcto! Abriendo tu pasaporte…');location.href='/mi-registro.html';
+ }catch(err){tell('No se pudo ingresar o completar el perfil: '+err.message+' Comprueba el correo, la contraseña y su confirmación.',true)}
+ finally{btn.disabled=false;el('loginPassword').value=''}
+});
+})().catch(e=>document.getElementById('result').textContent='Error de inicio: '+e.message);
+</script></body></html>
