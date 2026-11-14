@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Operación Campus · Estación 4 | Bootcamp UIP 2027</title>
+<style>
+:root{color-scheme:dark;--blue:#071e43;--orange:#ff9d1b;--ink:#eaf3ff;--border:#37649f}
+*{box-sizing:border-box}body{background:radial-gradient(circle at 12% 2%,#174d8a,transparent 48%),linear-gradient(135deg,#06162f,#092d5e);color:var(--ink);font:16px Arial,sans-serif;margin:0;min-height:100vh}main{max-width:1080px;margin:0 auto;padding:20px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--border);padding:12px 0}
+.brand{color:var(--orange);font-weight:900;letter-spacing:.06em}h1{font-size:clamp(29px,5vw,48px);margin:25px 0 6px}h2{margin:5px 0 14px}h3{margin:18px 0 10px}.sub{color:#b5ceea;line-height:1.55}.card{border:1px solid var(--border);border-radius:20px;background:#092852ee;padding:22px;margin:17px 0;box-shadow:0 10px 25px #0003}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:13px}.mission{border:1px solid #3a6fa4;border-radius:15px;padding:17px;background:#0b3467}.mission h3{margin:6px 0}.pill{background:var(--orange);color:var(--blue);font-size:12px;font-weight:900;padding:5px 10px;border-radius:30px;display:inline-block}.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.btn,button{border:0;border-radius:10px;background:var(--orange);color:var(--blue);padding:12px 16px;font-weight:800;font-size:15px;text-decoration:none;cursor:pointer;display:inline-block}button:disabled{opacity:.5;cursor:not-allowed}.secondary{border:1px solid #7294c1;color:white;background:transparent}input,textarea{width:100%;border:1px solid #638dc2;color:white;background:#061a3a;border-radius:10px;padding:12px;margin:5px 0 13px;font:inherit}textarea{resize:vertical;min-height:95px}label{display:block;font-weight:700;margin-top:12px}.hidden{display:none!important}.muted{font-size:13px;color:#bdd0e8}.message{border-left:4px solid var(--orange);background:#0e3a70;padding:13px;border-radius:5px;line-height:1.5}.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:12px;margin:12px 0}.photo{border:1px solid #496b95;border-radius:10px;padding:8px}.photo img{height:112px;width:100%;object-fit:cover;border-radius:6px}.photo a{color:#ffd394;font-size:12px;display:block}.photo button{font-size:12px;padding:7px;margin-top:5px}.bar{height:10px;background:#174271;border-radius:10px;overflow:hidden}.bar div{height:100%;background:var(--orange);transition:width .2s}.row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.cue{border:1px solid #a17730;border-radius:12px;padding:14px;background:#243455;line-height:1.6}.admin-item{border:1px solid #486c9d;border-radius:14px;padding:15px;margin:11px 0;background:#11376b}a{color:#ffd18f}@media(max-width:600px){.card{padding:17px}.photos{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style></head><body><main>
+<header><span class="brand">BOOTCAMP UIP 2027 · ESTACIÓN 4</span><div class="actions"><a class="btn secondary" href="/mi-registro.html">Pasaporte</a><a class="btn secondary" href="/mis-estaciones.html">Mis estaciones</a><button id="logout" class="secondary hidden">Cerrar sesión</button></div></header>
+<h1>OPERACIÓN CAMPUS</h1><h2>Conoce tus autoridades y tu campus seguro</h2><p class="sub">¡Tu misión es descubrir quiénes te acompañarán durante tu nueva vida universitaria! Recorre el campus, descifra las pistas, conversa con las autoridades y registra los descubrimientos de tu equipo. Cada misión superada te acerca a completar tu Pasaporte Digital.</p>
+<section class="card" id="loginPanel"><h2>Acceso al Bootcamp</h2><p class="sub">Utiliza tu correo y contraseña registrados.</p><form id="loginForm"><label>Correo<input id="email" type="email" autocomplete="username" required></label><label>Contraseña<input id="password" type="password" autocomplete="current-password" required></label><button type="submit">Ingresar</button></form></section>
+<section id="workspace" class="hidden">
+ <section class="card"><div class="row"><div><h2 id="greeting">Mi equipo</h2><p class="sub" id="teamInfo"></p></div><span class="pill" id="teamPoints">0 / 100 PUNTOS</span></div><div class="bar"><div id="progressBar" style="width:0%"></div></div><p id="passportProgress" class="muted"></p><p id="doneMessage" class="sub hidden">¡MISIÓN CUMPLIDA! Tu equipo ya conoce mejor a las autoridades que acompañarán su vida universitaria. Has desbloqueado una nueva experiencia UIP.</p></section>
+ <section class="card"><h2>Mis cuatro misiones</h2><div class="grid" id="missionList"></div></section>
+ <section class="card hidden" id="missionEditor"><div class="row"><h2 id="missionTitle"></h2><button type="button" id="closeEditor" class="secondary">Cerrar</button></div><p id="missionPlace" class="sub"></p><div class="cue" id="missionCipher"></div><p><strong>Pregunta del desafío</strong></p><p id="missionQuestion" class="sub"></p><form id="missionForm"><div id="fields"></div>
+ <h3>Fotografías y evidencias</h3><p class="muted">Hasta cinco fotos JPG, PNG o WebP por reto; máximo 10 MB cada una. Comparte imágenes de personas solo con autorización. Si alguien no autoriza fotografías, registra la evidencia alternativa en el campo indicado.</p>
+ <label>Autorización para uso de las fotografías en la evaluación del Bootcamp <input id="photoConsent" type="checkbox" style="width:auto;margin-left:8px"></label>
+ <label>Tomar fotografía o subir imagen<input id="photoFiles" type="file" accept="image/jpeg,image/png,image/webp" multiple></label>
+ <div class="actions"><button type="button" id="upload">Subir fotografías</button><span class="muted" id="photoCounter">0 / 5</span></div>
+ <div class="photos" id="gallery"></div>
+ <label>Evidencia alternativa / consentimiento no otorgado<textarea id="alternative" placeholder="Describe la evidencia alternativa cuando no se autorice fotografiar."></textarea></label>
+ <div class="actions"><button type="button" id="draft">Guardar borrador</button><button type="submit" id="submitMission">Enviar para validación</button></div>
+ <p class="message" id="editorStatus" role="status"></p></form></section>
+ <section id="adminPanel" class="card hidden"><div class="row"><h2>Estación 4 · Seguimiento de misiones</h2><div class="actions"><button id="refreshAdmin" type="button">Actualizar</button><button id="exportCsv" type="button" class="secondary">Exportar CSV (Excel)</button></div></div><div id="adminStats" class="sub"></div><div id="adminItems"></div></section>
+</section><p id="status" role="status" class="message">Inicializando…</p>
+</main><script src="/config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+(async()=>{'use strict';
+const $=id=>document.getElementById(id),show=(id,v)=>$(id).classList.toggle('hidden',!v),say=(id,t)=>$(id).textContent=t;
+const missions=[
+{id:1,name:'Operación Brújula',place:'Estación de Inicio',cipher:'Busca a quien guía el rumbo de toda nuestra universidad. Su cargo comienza con R y sus decisiones orientan el futuro institucional',question:'¿Qué consejo nos daría para comenzar con éxito nuestra carrera universitaria?',fields:[['autoridad','Nombre de la autoridad entrevistada'],['consejo','Consejo recibido'],['aplicacion','¿Cómo aplicará nuestro equipo este consejo durante su primer cuatrimestre?']]},
+{id:2,name:'Las dos llaves académicas',place:'El Corazón',cipher:'Dos guardianes del conocimiento conocen los caminos de cada profesión. Encuentren a dos de ellos, de carreras distintas, y consigan las llaves para iniciar su aventura académica',question:'¿Cuáles son los dos primeros pasos que debemos seguir para comenzar nuestras clases correctamente?',fields:[['director1','Nombre del director 1'],['carrera1','Carrera del director 1'],['paso11','Primer paso recomendado por director 1'],['paso12','Segundo paso recomendado por director 1'],['director2','Nombre del director 2'],['carrera2','Carrera del director 2'],['paso21','Primer paso recomendado por director 2'],['paso22','Segundo paso recomendado por director 2']]},
+{id:3,name:'El guardián del expediente',place:'Conoce la Vida Universitaria (TCU)',cipher:'No dicta todas las clases, pero custodia una parte esencial de tu historia académica. Si un documento falta, tu camino puede complicarse. Descubre quién es',question:'¿Por qué es importante completar y entregar oportunamente todos los documentos de nuestro expediente universitario?',fields:[['autoridad','Nombre de la autoridad entrevistada'],['razon1','Primera razón'],['razon2','Segunda razón'],['razon3','Tercera razón'],['consecuencia','Consecuencia de un expediente incompleto']]},
+{id:4,name:'Regreso a la base: campus seguro',place:'Estación 4 · Plaza de la Universidad',cipher:'Donde comenzó tu recorrido, encontrarás la prueba final. Regresa al lugar donde las historias se cruzan y el espíritu universitario se reúne',question:'Durante una actividad universitaria suena la alarma de evacuación. Un compañero se angustia, otro intenta regresar por sus pertenencias y alguien propone utilizar el ascensor.',fields:[['q1','¿Qué acciones debe realizar el equipo cuando se activa la alarma?'],['q2','¿Cómo apoyarían al compañero angustiado sin arriesgar su seguridad?'],['q3','¿Por qué no regresar por pertenencias ni usar el ascensor?'],['q4','¿A qué instancia institucional reportarían el riesgo?'],['q5','¿Qué mejora proponen para la seguridad y convivencia universitaria?']]}
+];
+const bucket='bootcamp-2027-operacion-campus',ext={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'};
+if(!window.supabase||!window.BOOTCAMP_SUPABASE_URL||!window.BOOTCAMP_SUPABASE_ANON_KEY){say('status','No se pudo conectar con Supabase.');return}
+const db=window.supabase.createClient(window.BOOTCAMP_SUPABASE_URL,window.BOOTCAMP_SUPABASE_ANON_KEY);
+let user=null,profile=null,admin=false,records=[],photoList=[],selected=0,adminRecords=[];
+const requestedMission=Number(new URLSearchParams(location.search).get('reto'));
+const validRequestedMission=Number.isInteger(requestedMission)&&requestedMission>=1&&requestedMission<=4;
+function status(t){say('status',t)}
+function stateText(s){return {draft:'Borrador',submitted:'Enviado',in_review:'En revisión',validated:'Validado',needs_correction:'Requiere corrección'}[s]||'Pendiente'}
+async function refresh(){
+ const {data,error}=await db.from('bootcamp_2027_campus_missions').select('*').eq('team',profile.team).order('mission');
+ if(error)throw error;records=data||[];
+ const points=records.filter(m=>m.status==='validated').length*25;
+ say('teamPoints',points+' / 100 PUNTOS');$('progressBar').style.width=points+'%';
+ say('passportProgress',missions.map(m=>'Reto '+m.id+': '+(records.find(r=>r.mission===m.id)?.status==='validated'?'25':'0')+'/25').join(' · '));
+ show('doneMessage',points===100);
+ const area=$('missionList');area.replaceChildren();
+ for(const m of missions){const record=records.find(x=>x.mission===m.id),card=document.createElement('div');card.className='mission';
+ const tag=document.createElement('span');tag.className='pill';tag.textContent='RETO '+m.id+' · 25 PUNTOS';card.append(tag);
+ const heading=document.createElement('h3');heading.textContent=m.name;card.append(heading);
+ const p=document.createElement('p');p.className='sub';p.textContent=m.place+' · '+stateText(record?.status);card.append(p);
+ const btn=document.createElement('button');btn.textContent=record?.status==='validated'?'Ver reto validado':'Abrir reto';btn.onclick=()=>openMission(m.id);card.append(btn);const link=document.createElement('a');link.className='btn secondary';link.style.marginLeft='8px';link.href='/operacion-campus.html?reto='+m.id;link.textContent='Enlace QR';card.append(link);area.append(card)}
+}
+async function getPhotos(team,mission,container,canDelete=false){
+ const {data,error}=await db.from('bootcamp_2027_campus_photos').select('id,object_path,file_name,uploader_id').eq('team',team).eq('mission',mission).order('created_at');
+ if(error)throw error;photoList=data||[];container.replaceChildren();say('photoCounter',photoList.length+' / 5');
+ for(const p of photoList){const wrap=document.createElement('div');wrap.className='photo';
+ const {data:link,error:e}=await db.storage.from(bucket).createSignedUrl(p.object_path,600);
+ if(!e){const img=document.createElement('img');img.loading='lazy';img.alt='Evidencia fotográfica';img.src=link.signedUrl;wrap.append(img);
+ const a=document.createElement('a');a.href=link.signedUrl;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Ver imagen';wrap.append(a)}
+ const nm=document.createElement('small');nm.textContent=p.file_name;wrap.append(nm);
+ if(canDelete&&p.uploader_id===user.id){const btn=document.createElement('button');btn.type='button';btn.textContent='Eliminar';btn.onclick=async()=>{if(!confirm('¿Eliminar esta fotografía?'))return;
+ const {error:ed}=await db.from('bootcamp_2027_campus_photos').delete().eq('id',p.id);if(ed){say('editorStatus',ed.message);return}
+ await db.storage.from(bucket).remove([p.object_path]);await getPhotos(team,mission,container,true)};wrap.append(btn)}
+ container.append(wrap)}
+}
+async function openMission(id){
+ selected=id;const m=missions[id-1],r=records.find(x=>x.mission===id);
+ say('missionTitle','Reto '+id+' · '+m.name);say('missionPlace',m.place);$('submitMission').textContent={1:'GUARDAR MI EVIDENCIA',2:'GUARDAR MIS DOS ENTREVISTAS',3:'REGISTRAR MI DESCUBRIMIENTO',4:'ENVIAR DESAFÍO FINAL'}[id];say('missionCipher','Mensaje en clave: '+m.cipher);say('missionQuestion',m.question);
+ const fields=$('fields');fields.replaceChildren();
+ for(const [key,label] of m.fields){const l=document.createElement('label');l.textContent=label;const input=document.createElement('textarea');input.dataset.key=key;input.value=r?.answers?.[key]||'';l.append(input);fields.append(l)}
+ $('alternative').value=r?.answers?.alternative||'';$('photoFiles').value='';$('photoConsent').checked=false;
+ const locked=['submitted','in_review','validated'].includes(r?.status);
+ for(const t of fields.querySelectorAll('textarea'))t.disabled=locked;
+ $('alternative').disabled=locked;$('photoFiles').disabled=locked;$('photoConsent').disabled=locked;$('upload').disabled=locked;$('draft').disabled=locked;$('submitMission').disabled=locked;
+ say('editorStatus',r?.status==='needs_correction'?'Correcciones solicitadas: '+(r.feedback||'Revisa las evidencias.'):(locked?'Reto enviado. Revisión pendiente o completada.':'Completa y guarda las evidencias del equipo.'));
+ show('missionEditor',true);await getPhotos(profile.team,id,$('gallery'),!locked);$('missionEditor').scrollIntoView({behavior:'smooth'});
+}
+function gather(){const fields={};for(const t of $('fields').querySelectorAll('textarea'))fields[t.dataset.key]=t.value.trim();fields.alternative=$('alternative').value.trim();return fields}
+async function save(submit){
+ if(!selected||admin)return;const m=missions[selected-1],fields=gather();
+ if(submit){const missing=m.fields.some(([k])=>!fields[k]);if(missing){say('editorStatus','Completa todas las respuestas antes de enviar.');return}
+ if(m.id===2&&fields.carrera1.toLowerCase()===fields.carrera2.toLowerCase()){say('editorStatus','Entrevista a directores de dos carreras distintas.');return}
+ if(photoList.length<(m.id===2?2:1)&&!fields.alternative){say('editorStatus','Adjunta las fotografías requeridas o explica la evidencia alternativa.');return}
+ }
+ const prev=records.find(x=>x.mission===selected);const data={team:profile.team,mission:selected,answers:fields,status:submit?'submitted':'draft'};
+ let res;
+ if(prev)res=await db.from('bootcamp_2027_campus_missions').update({answers:fields,status:data.status}).eq('id',prev.id).select('id').single();
+ else res=await db.from('bootcamp_2027_campus_missions').insert({...data,created_by:user.id}).select('id').single();
+ if(res.error){say('editorStatus','No se pudo guardar: '+res.error.message);return}
+ await refresh();say('editorStatus',submit?'Reto enviado para validación.':'Borrador guardado.');
+ if(submit)await openMission(selected);
+}
+async function compress(file){
+ if(!ext[file.type]||file.size>10*1024*1024||file.size===0)throw Error('Solo JPG, PNG o WebP de hasta 10 MB');
+ if(file.size<1200000)return file;
+ const img=await createImageBitmap(file);const factor=Math.min(1,1800/Math.max(img.width,img.height));const cvs=document.createElement('canvas');
+ cvs.width=Math.max(1,Math.round(img.width*factor));cvs.height=Math.max(1,Math.round(img.height*factor));cvs.getContext('2d').drawImage(img,0,0,cvs.width,cvs.height);img.close();
+ const blob=await new Promise(resolve=>cvs.toBlob(resolve,'image/jpeg',.82));if(!blob)throw Error('No se pudo procesar la imagen');return blob;
+}
+async function upload(){
+ const files=Array.from($('photoFiles').files||[]);
+ if(!files.length){say('editorStatus','Selecciona las fotografías.');return}
+ if(!$('photoConsent').checked){say('editorStatus','Confirma la autorización de uso de las fotografías; si no la tienes, utiliza evidencia alternativa.');return}
+ if(photoList.length+files.length>5){say('editorStatus','Máximo cinco fotografías por reto y equipo.');return}
+ $('upload').disabled=true;let loaded=0;
+ try{for(const file of files){const blob=await compress(file),extension=blob.type==='image/jpeg'?'jpg':ext[blob.type];
+ const path=user.id+'/4/'+selected+'/'+crypto.randomUUID()+'.'+extension;
+ const up=await db.storage.from(bucket).upload(path,blob,{contentType:blob.type,upsert:false});if(up.error)throw up.error;
+ const ins=await db.from('bootcamp_2027_campus_photos').insert({team:profile.team,mission:selected,uploader_id:user.id,object_path:path,file_name:file.name.slice(0,170),consent_confirmed:true});
+ if(ins.error){await db.storage.from(bucket).remove([path]);throw ins.error}loaded++}
+ await getPhotos(profile.team,selected,$('gallery'),true);$('photoFiles').value='';say('editorStatus','Fotografías guardadas: '+loaded);
+ }catch(e){say('editorStatus','Subidas '+loaded+'. Error: '+e.message)}finally{$('upload').disabled=false}
+}
+async function adminReload(){
+ const {data,error}=await db.from('bootcamp_2027_campus_missions').select('*').order('updated_at',{ascending:false}).limit(250);
+ const {data:people, error:peopleError}=await db.from('bootcamp_profiles').select('id,team,full_name,is_admin');
+ const teamCounts=new Map(),nameById=new Map();
+ if(!peopleError)for(const p of people||[]){nameById.set(p.id,p.full_name);if(!p.is_admin&&p.team)teamCounts.set(p.team,(teamCounts.get(p.team)||0)+1)}
+
+ if(error){say('adminItems','Error: '+error.message);return}adminRecords=data||[];
+ say('adminStats','Equipos: '+new Set(data.map(x=>x.team)).size+' · Misiones iniciadas: '+data.length+' · Enviadas/en revisión: '+data.filter(x=>['submitted','in_review'].includes(x.status)).length+' · Validadas: '+data.filter(x=>x.status==='validated').length+' · Puntos otorgados: '+(data.filter(x=>x.status==='validated').length*25));
+ const area=$('adminItems');area.replaceChildren();
+ for(const r of data){const card=document.createElement('div');card.className='admin-item';
+ const h=document.createElement('h3');h.textContent=r.team+' ('+(teamCounts.get(r.team)||0)+' integrantes) · Reto '+r.mission+' · '+stateText(r.status);card.append(h);
+ const p=document.createElement('p');p.className='muted';p.textContent='Envío: '+(r.submitted_at||'Sin envío')+' · Revisión: '+(r.reviewed_at||'Pendiente');card.append(p);const review=document.createElement('p');review.className='muted';review.textContent='Validador: '+(nameById.get(r.reviewed_by)||r.reviewed_by||'Pendiente')+' · Observaciones: '+(r.feedback||'Sin observaciones');card.append(review);
+ for(const [k,v] of Object.entries(r.answers||{})){const line=document.createElement('p');line.textContent=k+': '+v;card.append(line)}
+ const gallery=document.createElement('div');gallery.className='photos';card.append(gallery);
+ const picBtn=document.createElement('button');picBtn.type='button';picBtn.className='secondary';picBtn.textContent='Ver fotografías';picBtn.onclick=()=>getPhotos(r.team,r.mission,gallery);card.append(picBtn);
+ if(['submitted','in_review'].includes(r.status)){const actions=document.createElement('div');actions.className='actions';
+ for(const [name,value] of [['Aprobar +25','validated'],['Requiere corrección','needs_correction'],['En revisión','in_review']]){
+ const b=document.createElement('button');b.type='button';b.textContent=name;b.onclick=async()=>{
+ const feedback=prompt('Observaciones para el equipo','');if(feedback===null)return;
+ if(!confirm('¿Confirmas '+name+' para el reto '+r.mission+' de '+r.team+'?'))return;
+ const {data:ok,error:e}=await db.rpc('bootcamp_2027_campus_review',{p_team:r.team,p_mission:r.mission,p_action:value,p_feedback:feedback});
+ if(e||!ok){alert(e?.message||'No se pudo validar');return}await adminReload()};actions.append(b)}
+ card.append(actions)} const logs=document.createElement('div');logs.className='muted';card.append(logs);
+ const history=document.createElement('button');history.className='secondary';history.type='button';history.textContent='Historial';history.onclick=async()=>{
+  const {data:events,error:err}=await db.from('bootcamp_2027_campus_review_log').select('previous_status,new_status,reviewed_at,feedback,reviewed_by').eq('team',r.team).eq('mission',r.mission).order('reviewed_at',{ascending:false});
+  logs.replaceChildren();if(err){logs.textContent=err.message;return}
+  for(const e of events||[]){const row=document.createElement('p');row.textContent=e.reviewed_at+' · '+stateText(e.previous_status)+' → '+stateText(e.new_status)+' · '+(e.feedback||'Sin observaciones')+' · Responsable: '+(nameById.get(e.reviewed_by)||e.reviewed_by);logs.append(row)}
+ };card.append(history);
+area.append(card)}
+}
+function exportCsv(){
+ const esc=v=>'"'+String(v??'').replace(/"/g,'""').replace(/^[=+@-]/,'\u0027$&')+'"';
+ const rows=[['Equipo','Reto','Estado','Puntos','Enviado','Validado','Observaciones','Respuestas'],...adminRecords.map(r=>[r.team,r.mission,r.status,r.status==='validated'?25:0,r.submitted_at,r.reviewed_at,r.feedback,JSON.stringify(r.answers||{})])];
+ const csv='\ufeff'+rows.map(row=>row.map(esc).join(';')).join('\r\n');
+ const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Operacion_Campus_Estacion_4.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),5000);
+}
+async function enter(){
+ const {data:{user:u},error}=await db.auth.getUser();if(error||!u){show('loginPanel',true);show('workspace',false);show('logout',false);status('Inicia sesión para acceder a Operación Campus.');return}
+ const {data:p,error:e}=await db.from('bootcamp_profiles').select('full_name,team,is_admin').eq('id',u.id).single();
+ if(e||!p){status('No se encontró el registro en Supabase.');return}
+ user=u;profile=p;admin=p.is_admin===true&&!!u.email_confirmed_at;
+ show('loginPanel',false);show('workspace',true);show('logout',true);show('adminPanel',admin);
+ if(admin){show('missionEditor',false);show('missionList',false);await adminReload();status('Panel de revisión.');return}
+ if(!p.team){show('workspace',false);status('Aún no tienes equipo asignado. Solicita confirmación a Coordinación.');return}
+ show('missionList',true);say('greeting','Hola, '+p.full_name);say('teamInfo','Equipo: '+p.team+' · Los integrantes comparten respuestas y fotografías.');
+ await refresh();if(validRequestedMission)await openMission(requestedMission);
+ status('Operación Campus lista. Las evidencias deben ser validadas por Coordinación.');
+}
+$('loginForm').onsubmit=async e=>{e.preventDefault();const {error}=await db.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error){status('No se pudo ingresar. Revisa tus credenciales.');return}$('password').value='';await enter()};
+$('logout').onclick=async()=>{await db.auth.signOut();user=null;profile=null;admin=false;show('missionEditor',false);await enter()};
+$('closeEditor').onclick=()=>show('missionEditor',false);$('draft').onclick=()=>save(false);$('missionForm').onsubmit=e=>{e.preventDefault();save(true)};
+$('upload').onclick=upload;$('refreshAdmin').onclick=adminReload;$('exportCsv').onclick=exportCsv;
+await enter();
+})().catch(e=>document.getElementById('status').textContent='Error: '+e.message);
+</script></body></html>
