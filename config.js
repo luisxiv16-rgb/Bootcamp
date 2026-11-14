@@ -25,3 +25,15 @@ document.addEventListener('DOMContentLoaded', function () {
     nav.appendChild(button);
   });
 });
+
+/* Recuperación robusta de perfiles con un respaldo controlado por auth.uid().
+   No crea perfiles, no modifica registros y nunca permite consultar otras cuentas. */
+window.bootcampGetOwnProfile = async function (client, user) {
+  if (!user || !user.id) return { data: null, error: { message: 'La sesión no está autenticada.' } };
+  const primary = await client.from('bootcamp_profiles').select('id,full_name,email,school,career,team,is_admin,created_at').eq('id', user.id).maybeSingle();
+  if (!primary.error && primary.data) return { data: primary.data, error: null };
+  const backup = await client.rpc('bootcamp_2027_my_profile');
+  if (!backup.error && backup.data && backup.data.id === user.id) return { data: backup.data, error: null };
+  const detail = backup.error?.message || primary.error?.message || 'El perfil no está disponible.';
+  return { data: null, error: { message: detail } };
+};
