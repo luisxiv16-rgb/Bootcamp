@@ -71,7 +71,7 @@ async function getPhotos(team,mission,container,canDelete=false){
 }
 async function openMission(id){
  selected=id;const m=missions[id-1],r=records.find(x=>x.mission===id);
- say('missionTitle','Reto '+id+' · '+m.name);say('missionPlace',m.place);say('missionCipher','Mensaje en clave: '+m.cipher);say('missionQuestion',m.question);
+ say('missionTitle','Reto '+id+' · '+m.name);say('missionPlace',m.place);$('submitMission').textContent={1:'GUARDAR MI EVIDENCIA',2:'GUARDAR MIS DOS ENTREVISTAS',3:'REGISTRAR MI DESCUBRIMIENTO',4:'ENVIAR DESAFÍO FINAL'}[id];say('missionCipher','Mensaje en clave: '+m.cipher);say('missionQuestion',m.question);
  const fields=$('fields');fields.replaceChildren();
  for(const [key,label] of m.fields){const l=document.createElement('label');l.textContent=label;const input=document.createElement('textarea');input.dataset.key=key;input.value=r?.answers?.[key]||'';l.append(input);fields.append(l)}
  $('alternative').value=r?.answers?.alternative||'';$('photoFiles').value='';$('photoConsent').checked=false;
@@ -119,12 +119,16 @@ async function upload(){
 }
 async function adminReload(){
  const {data,error}=await db.from('bootcamp_2027_campus_missions').select('*').order('updated_at',{ascending:false}).limit(250);
+ const {data:people, error:peopleError}=await db.from('bootcamp_profiles').select('id,team,full_name,is_admin');
+ const teamCounts=new Map(),nameById=new Map();
+ if(!peopleError)for(const p of people||[]){nameById.set(p.id,p.full_name);if(!p.is_admin&&p.team)teamCounts.set(p.team,(teamCounts.get(p.team)||0)+1)}
+
  if(error){say('adminItems','Error: '+error.message);return}adminRecords=data||[];
- say('adminStats','Misiones iniciadas: '+data.length+' · Enviadas/en revisión: '+data.filter(x=>['submitted','in_review'].includes(x.status)).length+' · Validadas: '+data.filter(x=>x.status==='validated').length);
+ say('adminStats','Equipos: '+new Set(data.map(x=>x.team)).size+' · Misiones iniciadas: '+data.length+' · Enviadas/en revisión: '+data.filter(x=>['submitted','in_review'].includes(x.status)).length+' · Validadas: '+data.filter(x=>x.status==='validated').length+' · Puntos otorgados: '+(data.filter(x=>x.status==='validated').length*25));
  const area=$('adminItems');area.replaceChildren();
  for(const r of data){const card=document.createElement('div');card.className='admin-item';
- const h=document.createElement('h3');h.textContent=r.team+' · Reto '+r.mission+' · '+stateText(r.status);card.append(h);
- const p=document.createElement('p');p.className='muted';p.textContent='Envío: '+(r.submitted_at||'Sin envío')+' · Revisión: '+(r.reviewed_at||'Pendiente');card.append(p);const review=document.createElement('p');review.className='muted';review.textContent='Validador: '+(r.reviewed_by||'Pendiente')+' · Observaciones: '+(r.feedback||'Sin observaciones');card.append(review);
+ const h=document.createElement('h3');h.textContent=r.team+' ('+(teamCounts.get(r.team)||0)+' integrantes) · Reto '+r.mission+' · '+stateText(r.status);card.append(h);
+ const p=document.createElement('p');p.className='muted';p.textContent='Envío: '+(r.submitted_at||'Sin envío')+' · Revisión: '+(r.reviewed_at||'Pendiente');card.append(p);const review=document.createElement('p');review.className='muted';review.textContent='Validador: '+(nameById.get(r.reviewed_by)||r.reviewed_by||'Pendiente')+' · Observaciones: '+(r.feedback||'Sin observaciones');card.append(review);
  for(const [k,v] of Object.entries(r.answers||{})){const line=document.createElement('p');line.textContent=k+': '+v;card.append(line)}
  const gallery=document.createElement('div');gallery.className='photos';card.append(gallery);
  const picBtn=document.createElement('button');picBtn.type='button';picBtn.className='secondary';picBtn.textContent='Ver fotografías';picBtn.onclick=()=>getPhotos(r.team,r.mission,gallery);card.append(picBtn);
@@ -139,13 +143,13 @@ async function adminReload(){
  const history=document.createElement('button');history.className='secondary';history.type='button';history.textContent='Historial';history.onclick=async()=>{
   const {data:events,error:err}=await db.from('bootcamp_2027_campus_review_log').select('previous_status,new_status,reviewed_at,feedback,reviewed_by').eq('team',r.team).eq('mission',r.mission).order('reviewed_at',{ascending:false});
   logs.replaceChildren();if(err){logs.textContent=err.message;return}
-  for(const e of events||[]){const row=document.createElement('p');row.textContent=e.reviewed_at+' · '+stateText(e.previous_status)+' → '+stateText(e.new_status)+' · '+(e.feedback||'Sin observaciones')+' · Responsable: '+e.reviewed_by;logs.append(row)}
+  for(const e of events||[]){const row=document.createElement('p');row.textContent=e.reviewed_at+' · '+stateText(e.previous_status)+' → '+stateText(e.new_status)+' · '+(e.feedback||'Sin observaciones')+' · Responsable: '+(nameById.get(e.reviewed_by)||e.reviewed_by);logs.append(row)}
  };card.append(history);
 area.append(card)}
 }
 function exportCsv(){
  const esc=v=>'"'+String(v??'').replace(/"/g,'""').replace(/^[=+@-]/,'\u0027$&')+'"';
- const rows=[['Equipo','Reto','Estado','Puntos','Enviado','Validado','Observaciones'],...adminRecords.map(r=>[r.team,r.mission,r.status,r.status==='validated'?25:0,r.submitted_at,r.reviewed_at,r.feedback])];
+ const rows=[['Equipo','Reto','Estado','Puntos','Enviado','Validado','Observaciones','Respuestas'],...adminRecords.map(r=>[r.team,r.mission,r.status,r.status==='validated'?25:0,r.submitted_at,r.reviewed_at,r.feedback,JSON.stringify(r.answers||{})])];
  const csv='\ufeff'+rows.map(row=>row.map(esc).join(';')).join('\r\n');
  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Operacion_Campus_Estacion_4.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),5000);
 }
