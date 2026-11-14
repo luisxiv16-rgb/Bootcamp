@@ -92,8 +92,8 @@ function showPrivate(){el('loginCard').classList.add('hidden');el('passCard').cl
 async function loadOwnPass(){
  const {data:{user},error:authError}=await db.auth.getUser();
  if(authError||!user){hidePrivate();return}
- const {data:p,error}=await db.from('bootcamp_profiles').select('id,full_name,email,school,career,team,is_admin,created_at').eq('id',user.id).single();
- if(error||!p){hidePrivate();msg('No se pudo recuperar tu registro. Comprueba que hayas completado Registro rápido.',true);return}
+ const {data:p,error}=await window.bootcampGetOwnProfile(db,user);
+ if(error||!p){hidePrivate();msg('No se pudo recuperar tu perfil: '+(error?.message||'Registro no disponible')+'. Vuelve a iniciar sesión.',true);return}
  el('fullName').textContent=p.full_name||'No indicado';el('registeredEmail').textContent=p.email||user.email||'No indicado';
  el('career').textContent=p.is_admin?'Administración del Bootcamp':(p.career||'No indicada');
  el('school').textContent=p.school||'No indicada';
