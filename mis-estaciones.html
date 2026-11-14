@@ -176,8 +176,8 @@ async function initialize(){
  async function enter(){
   const {data:{user:current},error}=await client.auth.getUser();
   if(error||!current){show('login',true);show('workspace',false);show('logout',false);return}
-  const {data:p,error:e}=await client.from('bootcamp_profiles').select('full_name,email,team,career,is_admin').eq('id',current.id).single();
-  if(e||!p){msg('loginStatus','No se encuentra el perfil del registro.',true);return}
+  const {data:p,error:e}=await window.bootcampGetOwnProfile(client,current);
+  if(e||!p){msg('loginStatus','Error al recuperar el perfil: '+(e?.message||'No disponible')+'. Vuelve a iniciar sesión.',true);return}
   user=current;profile=p;isAdmin=p.is_admin===true&&!!current.email_confirmed_at;
   $('hello').textContent='Hola, '+(p.full_name||'participante');
   $('identity').textContent=p.email+' · '+(p.career||'');
