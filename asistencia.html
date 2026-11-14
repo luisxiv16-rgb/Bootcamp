@@ -1,17 +1,54 @@
 <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Asistencia general | Bootcamp UIP 2027</title><style>
-:root{color-scheme:dark}*{box-sizing:border-box}body{background:linear-gradient(135deg,#061937,#0e3f7b);font:16px Arial,sans-serif;color:#edf6ff;min-height:100vh;margin:0}main{max-width:750px;margin:24px auto;padding:22px}header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-bottom:1px solid #5178a8;padding-bottom:17px}.brand{font-weight:900;color:#ffa22a}.card{background:#082b57;border:1px solid #4a70a0;border-radius:20px;padding:24px;margin:20px 0}h1{font-size:clamp(27px,5vw,42px)}p{line-height:1.55}.muted{color:#bfd2ee}.hidden{display:none!important}button,.btn{display:inline-block;border:0;border-radius:11px;padding:12px 17px;background:#ffa22a;color:#071c40;font:700 16px Arial;cursor:pointer;text-decoration:none}.secondary{border:1px solid #7198c8;background:transparent;color:white}label{display:block;font-weight:700;margin-top:14px}input{background:#061b39;border:1px solid #7595bc;color:white;border-radius:10px;width:100%;font-size:16px;padding:13px;margin-top:7px}.item{background:#10437d;padding:14px;border-radius:12px;margin:12px 0}.item strong{display:block}.item button{margin-top:10px}.status{padding:14px;border-left:4px solid #ffa22a;background:#0d3669;border-radius:5px}.actions{display:flex;gap:12px;flex-wrap:wrap}</style></head><body><main><header><span class="brand">UIP · BOOTCAMP 2027</span><a href="/" class="btn secondary">Volver a Inicio</a></header><h1>Registro de asistencia general</h1><p class="muted">Sábado 14 de noviembre de 2026 · Universidad Interamericana de Panamá. Identifícate con la cuenta usada en Registro rápido.</p>
+:root{color-scheme:dark}*{box-sizing:border-box}body{background:linear-gradient(135deg,#061937,#0e3f7b);font:16px Arial,sans-serif;color:#edf6ff;min-height:100vh;margin:0}main{max-width:750px;margin:24px auto;padding:22px}header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-bottom:1px solid #5178a8;padding-bottom:17px}.brand{font-weight:900;color:#ffa22a}.card{background:#082b57;border:1px solid #4a70a0;border-radius:20px;padding:24px;margin:20px 0}h1{font-size:clamp(27px,5vw,42px)}p{line-height:1.55}.muted{color:#bfd2ee}.hidden{display:none!important}button,.btn{display:inline-block;border:0;border-radius:11px;padding:12px 17px;background:#ffa22a;color:#071c40;font:700 16px Arial;cursor:pointer;text-decoration:none}.secondary{border:1px solid #7198c8;background:transparent;color:white}label{display:block;font-weight:700;margin-top:14px}input{background:#061b39;border:1px solid #7595bc;color:white;border-radius:10px;width:100%;font-size:16px;padding:13px;margin-top:7px}.item{background:#10437d;padding:14px;border-radius:12px;margin:12px 0}.item strong{display:block}.item button{margin-top:10px}.status{padding:14px;border-left:4px solid #ffa22a;background:#0d3669;border-radius:5px}.actions{display:flex;gap:12px;flex-wrap:wrap}.attendance-list{max-height:65vh;overflow-y:auto;margin-top:12px}.attendee{display:flex;align-items:center;gap:13px;padding:12px;border-bottom:1px solid #426c9c}.attendee input[type=checkbox]{width:23px;height:23px;margin:0;flex:none;accent-color:#ff9d1b}.attendee span{flex:1;min-width:0;overflow-wrap:anywhere}.attendee small{display:block;color:#bbd1ed;margin-top:4px}.attendee.checked{background:#124e75}.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.controls input{flex:1;min-width:190px}.controls select{padding:12px;background:#061b39;border:1px solid #7595bc;color:white;border-radius:10px;font:inherit}@media(max-width:600px){main{padding:12px}.card{padding:16px}}</style></head><body><main><header><span class="brand">UIP · BOOTCAMP 2027</span><a href="/" class="btn secondary">Volver a Inicio</a></header><h1>Registro de asistencia general</h1><p class="muted">Sábado 14 de noviembre de 2026 · Universidad Interamericana de Panamá. Identifícate con la cuenta usada en Registro rápido.</p>
 <div class="card"><h2>Mi asistencia</h2><p class="status" id="status" aria-live="polite">Comprobando acceso…</p></div>
 <div id="login" class="card"><h2>Ingresar a mi registro</h2><form id="form"><label>Correo electrónico<input id="email" type="email" autocomplete="username" required></label><label>Contraseña<input id="password" type="password" autocomplete="current-password" required></label><div class="actions" style="margin-top:20px"><button id="loginBtn" type="submit">Ingresar</button><a class="btn secondary" href="/mi-registro.html">Ver mi pasaporte</a></div></form></div>
 <div id="participant" class="card hidden"><h2 id="participantName"></h2><p class="muted">Si escaneaste el QR oficial, tu asistencia se activará automáticamente al ingresar. No necesitas solicitar validación adicional ni volver a escanear.</p><button id="registerBtn" type="button">Registrar mi llegada (sin QR)</button><div class="actions" style="margin-top:18px"><a class="btn secondary" href="/mi-registro.html">Ver mi QR personal</a><button class="secondary" id="logout1" type="button">Cerrar sesión</button></div></div>
-<div id="admin" class="card hidden"><h2>Coordinación · control de asistencia</h2><p id="attendanceCounts" class="status">Cargando totales…</p><p class="muted">Validar solamente participantes presentes en el evento.</p><button id="refresh" type="button">Actualizar pendientes</button><div id="pending"></div><button class="secondary" id="logout2" type="button">Cerrar sesión</button></div>
+<div id="admin" class="card hidden"><h2>Coordinación · control de asistencia</h2><p id="attendanceCounts" class="status">Cargando totales…</p><p class="muted">Validar solamente participantes presentes en el evento.</p><div class="card" style="margin:14px 0;padding:16px"><h3>Check de asistencia · Participantes</h3><p class="muted">Marca la casilla únicamente cuando el participante esté presente. Los registros por QR aparecen marcados automáticamente.</p><div class="controls"><input id="searchAttendance" type="search" placeholder="Buscar por nombre, correo o equipo" aria-label="Buscar participante"><select id="filterAttendance" aria-label="Filtrar asistencias"><option value="all">Todos</option><option value="pending">Sin confirmar</option><option value="validated">Asistencia confirmada</option></select><button type="button" id="reloadChecklist" class="secondary">Actualizar lista</button></div><p id="checklistStatus" role="status" class="muted"></p><div id="checklist" class="attendance-list"></div></div><h3>Solicitudes pendientes</h3><button id="refresh" type="button">Actualizar pendientes</button><div id="pending"></div><button class="secondary" id="logout2" type="button">Cerrar sesión</button></div>
 <p class="muted">El registro general está habilitado desde este momento y permanece abierto hasta el 14 de noviembre a las 11:59 p. m. (hora de Panamá).</p>
 </main><script src="/config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 (async()=>{'use strict';const $=id=>document.getElementById(id),visible=(id,v)=>$(id).classList.toggle('hidden',!v),message=t=>$('status').textContent=t;
 if(!window.supabase||!window.BOOTCAMP_SUPABASE_URL||!window.BOOTCAMP_SUPABASE_ANON_KEY){message('No se pudo conectar el sistema. Recarga la página.');return}
 const db=window.supabase.createClient(window.BOOTCAMP_SUPABASE_URL,window.BOOTCAMP_SUPABASE_ANON_KEY);
-let user=null,profile=null,admin=false;const scanCode=new URLSearchParams(location.search).get('codigo');
+let user=null,profile=null,admin=false,allParticipants=[],attendanceByUser=new Map();const scanCode=new URLSearchParams(location.search).get('codigo');
 if(scanCode){history.replaceState(null,'',location.pathname);message('Código QR detectado. Inicia sesión para activar tu asistencia.');}
+async function loadChecklist(){
+ const [profiles,attendance]=await Promise.all([
+  db.from('bootcamp_profiles').select('id,full_name,email,team,is_admin').eq('is_admin',false).order('full_name').limit(5000),
+  db.from('bootcamp_2027_event_attendance').select('user_id,status,validation_source,validated_at').limit(5000)
+ ]);
+ if(profiles.error||attendance.error){$('checklistStatus').textContent='No se pudo cargar: '+(profiles.error?.message||attendance.error?.message);return}
+ allParticipants=profiles.data||[];
+ attendanceByUser=new Map((attendance.data||[]).map(x=>[x.user_id,x]));
+ renderChecklist();
+}
+function renderChecklist(){
+ const search=$('searchAttendance').value.trim().toLocaleLowerCase('es');
+ const mode=$('filterAttendance').value;
+ const validated=allParticipants.filter(p=>attendanceByUser.get(p.id)?.status==='validated').length;
+ $('checklistStatus').textContent='Participantes: '+allParticipants.length+' · Asistencia confirmada: '+validated+' · Sin confirmar: '+(allParticipants.length-validated);
+ const area=$('checklist');area.replaceChildren();
+ for(const p of allParticipants){
+  const a=attendanceByUser.get(p.id),checked=a?.status==='validated';
+  if(mode==='validated'&&!checked||mode==='pending'&&checked)continue;
+  if(search&&!(p.full_name+' '+p.email+' '+(p.team||'')).toLocaleLowerCase('es').includes(search))continue;
+  const row=document.createElement('label');row.className='attendee'+(checked?' checked':'');
+  const check=document.createElement('input');check.type='checkbox';check.checked=checked;check.disabled=checked;check.setAttribute('aria-label','Marcar asistencia de '+p.full_name);
+  const info=document.createElement('span');const name=document.createElement('strong');name.textContent=p.full_name;info.append(name);
+  const details=document.createElement('small');details.textContent=p.email+' · '+(p.team||'Sin equipo')+' · '+(checked?'Confirmado por '+(a.validation_source==='qr'?'QR':'Coordinación'):(a?.status==='pending'?'Pendiente de validación':'Sin registro'));info.append(details);
+  check.onchange=async()=>{
+   if(!check.checked)return;
+   if(!confirm('¿Confirmas la presencia física de '+p.full_name+'?')){check.checked=false;return}
+   check.disabled=true;
+   const {data,error}=await db.rpc('bootcamp_2027_admin_mark_attendance',{p_user_id:p.id});
+   if(error||!data){check.disabled=false;check.checked=false;$('checklistStatus').textContent='Error al marcar: '+(error?.message||'No se guardó');return}
+   message('Asistencia confirmada para '+p.full_name);
+   await Promise.all([loadChecklist(),loadPending()]);
+  };
+  row.append(check,info);area.append(row);
+ }
+ if(!area.childElementCount)area.textContent='No se encontraron participantes para este filtro.';
+}
 async function loadPending(){
 const {data:totals,error:totalError}=await db.from('bootcamp_2027_event_attendance').select('status');
 if(!totalError){const items=totals||[];$('attendanceCounts').textContent='Asistencia confirmada: '+items.filter(a=>a.status==='validated').length+' · Pendientes: '+items.filter(a=>a.status==='pending').length+' · Registros: '+items.length;}
@@ -32,7 +69,7 @@ if(err||!u){visible('login',true);visible('participant',false);visible('admin',f
 const {data:p,error:e}=await window.bootcampGetOwnProfile(db,u);if(e||!p){message('No se encontró tu inscripción en Supabase.');return}
 user=u;profile=p;admin=p.is_admin===true&&!!u.email_confirmed_at;
 visible('login',false);visible('participant',!admin);visible('admin',admin);
-if(admin){message('Cuenta administrativa. Aquí puedes verificar asistencia presencial.');await loadPending();return}
+if(admin){message('Cuenta administrativa. Aquí puedes verificar asistencia presencial.');await Promise.all([loadPending(),loadChecklist()]);return}
 $('participantName').textContent='Hola, '+p.full_name;
 if(scanCode){
  const {data:qrResult,error:scanError}=await db.rpc('bootcamp_2027_scan_attendance',{p_code:scanCode});
@@ -47,7 +84,7 @@ message(existing?(existing.status==='validated'?'¡Asistencia activada y confirm
 }
 $('form').addEventListener('submit',async e=>{e.preventDefault();$('loginBtn').disabled=true;const {error}=await db.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});$('loginBtn').disabled=false;if(error){message('No se pudo ingresar. Verifica tu correo y contraseña.');return}$('password').value='';await load()});
 $('registerBtn').onclick=async()=>{$('registerBtn').disabled=true;const {data,error}=await db.rpc('bootcamp_2027_request_event_attendance');if(error){message('No se pudo registrar: '+error.message);$('registerBtn').disabled=false;return}message(data?.[0]?.status==='validated'?'Asistencia confirmada.':'Solicitud de asistencia enviada. Acércate a Coordinación para su confirmación.');$('registerBtn').textContent='Solicitud registrada'};
-$('refresh').onclick=loadPending;
+$('refresh').onclick=()=>Promise.all([loadPending(),loadChecklist()]);$('reloadChecklist').onclick=()=>Promise.all([loadChecklist(),loadPending()]);$('searchAttendance').oninput=renderChecklist;$('filterAttendance').onchange=renderChecklist;
 for(const b of ['logout1','logout2'])$(b).onclick=async()=>{await db.auth.signOut();user=null;profile=null;admin=false;await load()};
 await load();
 })().catch(e=>document.getElementById('status').textContent='Error al iniciar: '+e.message);
