@@ -26,7 +26,7 @@ const row=document.createElement('div'),btn=document.createElement('button');btn
 async function load(){
 const {data:{user:u},error:err}=await db.auth.getUser();
 if(err||!u){visible('login',true);visible('participant',false);visible('admin',false);message('Inicia sesión para registrar tu llegada.');return}
-const {data:p,error:e}=await db.from('bootcamp_profiles').select('id,full_name,is_admin').eq('id',u.id).single();if(e||!p){message('No se encontró tu inscripción en Supabase.');return}
+const {data:p,error:e}=await window.bootcampGetOwnProfile(db,u);if(e||!p){message('No se encontró tu inscripción en Supabase.');return}
 user=u;profile=p;admin=p.is_admin===true&&!!u.email_confirmed_at;
 visible('login',false);visible('participant',!admin);visible('admin',admin);
 if(admin){message('Cuenta administrativa. Aquí puedes verificar asistencia presencial.');await loadPending();return}
