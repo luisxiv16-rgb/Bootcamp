@@ -50,7 +50,7 @@ button,.btn{background:var(--naranja);color:#071e43;border:0;border-radius:12px;
 <div class="field"><strong>Programa / Carrera</strong><span id="career"></span></div>
 <div class="field"><strong>Sede / Procedencia</strong><span id="school"></span></div>
 <div class="field"><strong>Equipo</strong><span id="team"></span></div>
-<div class="field"><strong>Fecha de inscripción (Panamá)</strong><span id="createdAt"></span></div><div class="field"><strong>Puntos de inscripción</strong><span id="registrationPoints">—</span></div><div class="field"><strong>Puntos por QR validados</strong><span id="qrPoints">—</span></div><div class="field"><strong>Puntos totales acreditados</strong><span id="totalPoints">—</span></div>
+<div class="field"><strong>Fecha de inscripción (Panamá)</strong><span id="createdAt"></span></div><div class="field"><strong>Puntos de inscripción</strong><span id="registrationPoints">—</span></div><div class="field"><strong>Puntos por QR validados</strong><span id="qrPoints">—</span></div><div class="field"><strong>Puntos totales acreditados</strong><span id="totalPoints">—</span></div><div class="field"><strong>Operación Campus · Estación 4</strong><span id="campusPoints">—</span></div>
 </div>
 
 <section id="passportRoute" aria-labelledby="routeTitle">
@@ -74,7 +74,7 @@ button,.btn{background:var(--naranja);color:#071e43;border:0;border-radius:12px;
 </div>
 <p class="route-warning">El orden del 1 al 7 identifica las estaciones oficiales, pero no constituye la secuencia individual de rotación de tu equipo. Coordinación confirmará la ruta asignada. El código QR identifica tu registro; no acredita asistencia automáticamente.</p>
 </section>
-<div class="qrbox"><div id="qrcode" aria-label="Código QR individual"></div></div>
+<section id="campusPassport" class="card hidden" style="margin-top:16px"><h3>Operación Campus · Estación 4</h3><p class="sub">Cuatro retos grupales de 25 puntos cada uno. Comparte los avances y evidencias con tu equipo.</p><p id="campusRetoSummary" class="sub">Reto 1: 0/25 · Reto 2: 0/25 · Reto 3: 0/25 · Reto 4: 0/25</p><p id="campusTeamTotal" class="sub">Total: 0/100</p><a class="btn secondary" href="/operacion-campus.html">Abrir Operación Campus</a></section><div class="qrbox"><div id="qrcode" aria-label="Código QR individual"></div></div>
 <p class="note" style="text-align:center">Este código identifica tu registro en el Bootcamp. La asistencia y los puntos requieren validación por el equipo organizador. No compartas tu contraseña.</p>
 <div class="actions"><button type="button" id="printBtn">Imprimir / Guardar PDF</button><a class="btn secondary" href="/mis-estaciones.html">Mis estaciones y retos</a><a class="btn secondary" href="/">Volver a mis desafíos</a></div>
 </section>
@@ -102,23 +102,34 @@ async function loadOwnPass(){
  if(p.is_admin){
    el('registrationPoints').textContent='No aplica';
    el('qrPoints').textContent='No aplica';
-   el('totalPoints').textContent='No aplica';
+   el('totalPoints').textContent='No aplica';el('campusPoints').textContent='No aplica';
  }else{
    const {data:pts,error:ptError}=await db.from('bootcamp_2027_points_summary')
-     .select('registration_points,station_qr_points,evaluated_points')
+     .select('registration_points,station_qr_points,evaluated_points,campus_station4_points,total_points')
      .eq('user_id',user.id).maybeSingle();
    if(ptError||!pts){
      el('registrationPoints').textContent='No disponible';
      el('qrPoints').textContent='No disponible';
-     el('totalPoints').textContent='No disponible';
+     el('totalPoints').textContent='No disponible';el('campusPoints').textContent='No disponible';
    }else{
      el('registrationPoints').textContent=pts.registration_points+' / 10';
      el('qrPoints').textContent=pts.station_qr_points+' / 140';
-     el('totalPoints').textContent=(pts.registration_points+pts.station_qr_points+pts.evaluated_points)+' puntos';
+     el('totalPoints').textContent=pts.total_points+' puntos';
+     el('campusPoints').textContent=pts.campus_station4_points+' / 100';
    }
  }
 
  el('passMessage').textContent=p.is_admin?'Acceso administrativo verificado':'Registro individual confirmado en Supabase';
+ if(!p.is_admin&&p.team){
+   el('campusPassport').classList.remove('hidden');
+   const {data:missions,error:missionError}=await db.from('bootcamp_2027_campus_missions').select('mission,status').eq('team',p.team);
+   if(!missionError){
+     const flags=[1,2,3,4].map(i=>missions?.some(m=>m.mission===i&&m.status==='validated')?25:0);
+     el('campusRetoSummary').textContent=flags.map((pt,i)=>'Reto '+(i+1)+': '+pt+'/25').join(' · ');
+     const total=flags.reduce((a,b)=>a+b,0);
+     el('campusTeamTotal').textContent='Total Estación 4: '+total+'/100';
+   }
+ }else el('campusPassport').classList.add('hidden');
  el('qrcode').replaceChildren();
  if(typeof QRCode==='undefined'){hidePrivate();msg('No se pudo cargar el generador QR. Comprueba tu conexión a Internet.',true);return}
  new QRCode(el('qrcode'),{text:'UIP-BOOTCAMP-2027:'+p.id,width:210,height:210,colorDark:'#071e43',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
