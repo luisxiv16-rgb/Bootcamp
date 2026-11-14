@@ -155,8 +155,8 @@ function exportCsv(){
 }
 async function enter(){
  const {data:{user:u},error}=await db.auth.getUser();if(error||!u){show('loginPanel',true);show('workspace',false);show('logout',false);status('Inicia sesión para acceder a Operación Campus.');return}
- const {data:p,error:e}=await db.from('bootcamp_profiles').select('full_name,team,is_admin').eq('id',u.id).single();
- if(e||!p){status('No se encontró el registro en Supabase.');return}
+ const {data:p,error:e}=await window.bootcampGetOwnProfile(db,u);
+ if(e||!p){status('No se pudo recuperar el perfil: '+(e?.message||'Perfil no disponible')+'. Cierra sesión y vuelve a ingresar.');return}
  user=u;profile=p;admin=p.is_admin===true&&!!u.email_confirmed_at;
  show('loginPanel',false);show('workspace',true);show('logout',true);show('adminPanel',admin);
  if(admin){show('missionEditor',false);show('missionList',false);await adminReload();status('Panel de revisión.');return}
